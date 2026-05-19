@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Avondale Garage Sale</title>
+<meta name="description" content="What the Avondale Garage Sale is, where the boundary runs, who's behind it, and how to get involved.">
+<link rel="stylesheet" href="styles.css">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGYSED0BC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EBGYSED0BC');
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Avondale <span class="yellow">Garage Sale</span></a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <ellipse cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <rect x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
+        <path d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/permit">Permit</a></li>
+      <li><a href="/shop">Shoppers</a></li>
+      <li><a href="/about" class="active">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="stripe"></div>
+
+<header class="page-header">
+  <div class="section-num">About</div>
+  <h1>A garage sale, <span class="yellow">but bigger.</span></h1>
+  <p>What this is, where the boundary runs, who's behind it, and the questions people keep asking.</p>
+</header>
+
+<div class="stripe"></div>
+
+<main class="prose">
+
+  <h2>The idea</h2>
+  <p>Inspired by neighborhood-wide sales in places like Ravenswood Manor, this is a one-day, all-at-once garage sale where dozens of Avondale households open their doors on the same Saturday morning. One digital map, one date, one big walking loop of stuff to discover.</p>
+  <p>It's free to participate. There's no fee, no booth, no application process beyond filling out the form. If your address is inside the boundary, you're in.</p>
+
+  <h2>The boundary</h2>
+  <p>For the first year, we're keeping it small enough to walk:</p>
+  <ul>
+    <li><strong>North:</strong> Belmont Avenue</li>
+    <li><strong>South:</strong> Diversey Avenue</li>
+    <li><strong>West:</strong> Pulaski Road</li>
+    <li><strong>Northeast:</strong> Milwaukee Avenue (with the Kennedy Expressway just beyond)</li>
+  </ul>
+  <p>That's a pocket of about 30 walkable blocks in south-west Avondale. If the first year goes well, we'll expand.</p>
+
+  <div class="map-wrap" style="margin: 24px 0 48px;">
+    <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
+  </div>
+
+  <h2>Who runs this?</h2>
+  <p>Right now, just neighbors. There's no formal organization, no nonprofit, no board. Just a small group of folks who think Avondale would love this. If it grows, it might become something more official — but year one, we're keeping it lean.</p>
+
+  <h2>Frequently asked</h2>
+
+  <h3>Do I need to live in the boundary to sell?</h3>
+  <p>Yes — you need to host the sale from a property inside the boundary. If you have a friend in the zone who'd let you set up at their place, that works.</p>
+
+  <h3>Do I need to live in the boundary to shop?</h3>
+  <p>No. Anyone can shop. Bring your friends. Bring people from the suburbs. The more, the better.</p>
+
+  <h3>What if it rains?</h3>
+  <p>Sales happen rain or shine. Individual sellers can choose to cancel, but the event runs.</p>
+
+  <h3>What about permits or city paperwork?</h3>
+  <p>Yes — Chicago requires a free permit for every household holding a sale. It takes about 5 minutes in person at your ward office, and it's free. We made a whole page about how to get one fast: <a href="/permit">read the permit guide</a>.</p>
+
+  <h3>Will there be food?</h3>
+  <p>We're still figuring out the food and drink situation. If we line up vendors, we'll post the details here closer to the event. Local vendors interested in setting up: email us.</p>
+
+  <h3>Can I sell food or drinks from my house?</h3>
+  <p>Selling prepared food from a residence generally requires a city permit and food-handling certification, which is more hassle than it's worth for a one-day event. Free lemonade or water for shoppers is fine. Selling pre-packaged baked goods at small scale falls under Illinois' cottage food law — read up on it before you do, and only sell items that qualify.</p>
+
+  <h3>Can I be removed from the map?</h3>
+  <p>Yes — email <a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a> and we'll take you off. You can be removed at any time.</p>
+
+  <h3>How can I help if I'm not selling?</h3>
+  <p>Volunteer on event day, share the site on Nextdoor or Facebook groups, or just tell your neighbors. Email us if you want to get involved.</p>
+
+  <h2>Contact</h2>
+  <p>Questions, ideas, sponsorship offers, or "I'd like to help organize this":<br><a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a></p>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Avondale <span class="yellow">Garage Sale</span></div>
+      <div class="footer-tagline">Run by neighbors · Free to join</div>
+    </div>
+    <div>
+      <h4>The event</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/permit">Permit</a></li>
+        <li><a href="/shop">Shoppers</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get in touch</h4>
+      <ul>
+        <li><a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Avondale Garage Sale</span>
+    <span>Made on Davlin Ct</span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var toggle = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('primary-nav');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function() {
+      var open = menu.classList.toggle('open');
+      toggle.classList.toggle('wiggle', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<script>
+  (function() {
+    var mapEl = document.getElementById('boundary-map');
+    if (!mapEl || typeof mapboxgl === 'undefined') return;
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFubnltYWxsZXIiLCJhIjoiY21wY3RiYWtrMDJuOTJxb2RibG95dzI0aSJ9.slYxHExWPCCAaYkGxuSizw';
+
+    var boundary = [
+      [-87.7272, 41.9391], // NW: Belmont & Pulaski
+      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
+      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
+      [-87.7271, 41.9317], // SW: Diversey & Pulaski
+      [-87.7272, 41.9391]
+    ];
+
+    var samplePin = [-87.7256, 41.9357]; // 3021 N Davlin Ct (sample)
+
+    var map = new mapboxgl.Map({
+      container: 'boundary-map',
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [-87.7195, 41.9355],
+      zoom: 13.2,
+      attributionControl: { compact: true }
+    });
+
+    map.scrollZoom.disable();
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+    requestAnimationFrame(function() { map.resize(); });
+    window.addEventListener('load', function() { map.resize(); });
+
+    map.on('load', function() {
+      map.addSource('boundary', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: { type: 'Polygon', coordinates: [boundary] }
+        }
+      });
+      map.addLayer({
+        id: 'boundary-fill',
+        type: 'fill',
+        source: 'boundary',
+        paint: { 'fill-color': '#f4b71b', 'fill-opacity': 0.25 }
+      });
+      map.addLayer({
+        id: 'boundary-line',
+        type: 'line',
+        source: 'boundary',
+        paint: { 'line-color': '#1a1410', 'line-width': 3 }
+      });
+
+      var el = document.createElement('div');
+      el.className = 'map-park-marker';
+      new mapboxgl.Marker({ element: el, anchor: 'center' })
+        .setLngLat(samplePin)
+        .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
+          .setHTML('<strong>Sample seller</strong>Real registered addresses will appear here as people sign up.'))
+        .addTo(map);
+
+      map.resize();
+    });
+  })();
+</script>
+</body>
+</html>

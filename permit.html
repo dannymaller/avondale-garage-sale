@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get your permit — Avondale Garage Sale</title>
+<meta name="description" content="Chicago requires a free garage sale permit. Here's the fastest way to get one for your address in the boundary.">
+<link rel="stylesheet" href="styles.css">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGYSED0BC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EBGYSED0BC');
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Avondale <span class="yellow">Garage Sale</span></a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <ellipse cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <rect x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
+        <path d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/permit" class="active">Permit</a></li>
+      <li><a href="/shop">Shoppers</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="stripe"></div>
+
+<header class="page-header">
+  <div class="section-num">Sellers</div>
+  <h1>Get your <span class="yellow">permit.</span></h1>
+  <p>Free. Five minutes. Walk into your ward office, fill out one page, done.</p>
+</header>
+
+<div class="stripe"></div>
+
+<main class="prose">
+
+  <div class="prereq-callout">
+    <strong>Haven't registered for the sale yet?</strong>
+    <p>Do that first — it's how your address gets on the map for shoppers. The permit comes second.</p>
+    <a href="/register" class="btn btn-dark">Register first →</a>
+  </div>
+
+  <h2>The fastest way</h2>
+  <p><strong>Walk into your ward office in person.</strong> They have copies of the application on hand. Filling it out takes about 5 minutes. You leave with the permit the same day. No mailing, no waiting, no faxing.</p>
+
+  <p>Bring one thing: a <strong>valid driver's license or Illinois state ID with your current address on it</strong>. That's it — that covers both photo ID and proof of residency in one document.</p>
+
+  <p>If your ID address doesn't match the sale address (recently moved, license is outdated, etc.), bring a recent utility bill or lease showing your current address along with the ID.</p>
+
+  <p>The form is a single page. You hand it over, they stamp it, you walk out with your permit.</p>
+
+  <p class="callout-inline"><strong>Recommended:</strong> grab your permit by <strong>Thursday, July 16</strong> — that's two days before the event, which gives you a buffer in case anything's missing. You can technically get it the day of, but don't cut it that close.</p>
+
+  <h2>Where to go</h2>
+  <p>Our entire boundary sits inside the 35th Ward, so every household goes to the same office:</p>
+
+  <div class="permit-wards permit-wards-single">
+
+    <div class="permit-ward">
+      <div class="permit-ward-num">35th Ward office</div>
+      <h3>Anthony Quezada</h3>
+      <p class="permit-ward-rep">Alderman, 35th Ward</p>
+      <p class="permit-ward-addr">2934 N Milwaukee Ave, Unit C<br>Chicago, IL 60618</p>
+      <p class="permit-ward-hours">Mon–Fri, 9am–5pm</p>
+      <p class="permit-ward-contact">
+        <a href="tel:7739853510">773-985-3510</a><br>
+        <a href="mailto:ward35@cityofchicago.org">ward35@cityofchicago.org</a>
+      </p>
+      <a href="https://www.ward35.org/" class="btn btn-dark" target="_blank" rel="noopener">ward35.org →</a>
+    </div>
+
+  </div>
+
+  <h2>Can't go in person?</h2>
+  <p>If you really can't get there during business hours, here are the alternatives — slower, but they work:</p>
+  <ul>
+    <li><strong>Email it</strong> — download the application from chicago.gov, fill out page 2, scan or photograph it along with your ID, and email both to your ward office.</li>
+    <li><strong>Fax or mail</strong> — both are accepted. Fax numbers and mailing addresses are listed on each ward's website.</li>
+  </ul>
+
+  <p><a href="https://www.chicago.gov/content/dam/city/depts/streets/general/Garage_Sale_Application_English_2024.pdf" target="_blank" rel="noopener">Download the application (PDF)</a> — you only need to fill out page 2.</p>
+
+  <h2>The rules in 30 seconds</h2>
+  <ul>
+    <li>Each household needs its <strong>own permit</strong> — even if you're joining a multi-house event like this one</li>
+    <li>Sales run <strong>9am to sunset</strong>; the permit must be displayed during the sale</li>
+    <li>You're limited to <strong>2 permits per year</strong> (3 if you're moving permanently)</li>
+    <li>Signs can <strong>only be posted on your own property</strong> — not on poles, fences, or city property. Fines are $50–$500 per day per sign.</li>
+  </ul>
+
+  <p style="margin-top: 48px;">Questions? Email <a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a> and we'll help you figure it out.</p>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Avondale <span class="yellow">Garage Sale</span></div>
+      <div class="footer-tagline">Run by neighbors · Free to join</div>
+    </div>
+    <div>
+      <h4>The event</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/permit">Permit</a></li>
+        <li><a href="/shop">Shoppers</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get in touch</h4>
+      <ul>
+        <li><a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Avondale Garage Sale</span>
+    <span>Made on Davlin Ct</span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var toggle = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('primary-nav');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function() {
+      var open = menu.classList.toggle('open');
+      toggle.classList.toggle('wiggle', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+</body>
+</html>

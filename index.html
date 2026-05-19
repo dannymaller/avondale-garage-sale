@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avondale Garage Sale — Save the date</title>
+<meta name="description" content="A neighborhood-wide garage sale in Chicago's Avondale. One Saturday, dozens of households, every kind of bargain.">
+<link rel="stylesheet" href="styles.css">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGYSED0BC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EBGYSED0BC');
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Avondale <span class="yellow">Garage Sale</span></a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- bottom bun -->
+        <ellipse cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <!-- sausage -->
+        <ellipse cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <rect x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
+        <!-- top bun -->
+        <!-- mustard squiggle -->
+        <path d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/permit">Permit</a></li>
+      <li><a href="/shop">Shoppers</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="stripe"></div>
+
+<section class="hero">
+  <div class="hero-fan">
+    <span class="dark">Saturday</span>
+    <span>July 18, 2026</span>
+    <span class="green">10am — 4pm</span>
+    <span class="dark">Rain or shine</span>
+  </div>
+
+  <h1 class="hero-title">Avondale<br><span class="yellow">Garage Sale</span></h1>
+
+  <div class="hero-stars">★ ★ ★</div>
+
+  <p class="hero-sub">Dozens of houses. One walking loop. Every kind of treasure you didn't know you needed.</p>
+
+  <div class="hero-cta-row">
+    <a href="/register" class="btn btn-yellow">Host a sale →</a>
+    <a href="/shop" class="btn btn-dark">Plan your route</a>
+  </div>
+</section>
+
+<div class="stripe"></div>
+
+<section class="section">
+  <div class="section-num">01 · What this is</div>
+  <h2 class="section-title">A neighborhood-wide<br><span class="red">treasure hunt.</span></h2>
+
+  <div class="grid-3">
+    <div>
+      <div class="grid-item-num">01</div>
+      <h3 class="grid-item-title">Sellers open up.</h3>
+      <p class="grid-item-body">Households across Avondale sign up to host a sale from their garage, yard, or stoop. One Saturday, all at once. The more neighbors, the bigger the haul.</p>
+    </div>
+    <div>
+      <div class="grid-item-num">02</div>
+      <h3 class="grid-item-title">Shoppers wander.</h3>
+      <p class="grid-item-body">A free, shareable digital map shows every participating address. Park once, walk the neighborhood, find vintage furniture, vinyl, baby gear, plants, kitchen stuff, and the weird thing you didn't know you needed.</p>
+    </div>
+    <div>
+      <div class="grid-item-num">03</div>
+      <h3 class="grid-item-title">Walk the loop.</h3>
+      <p class="grid-item-body">No tickets, no schedule, no order. Pull up the map on your phone, wander block to block, take breaks where you like, and head home when your arms are full.</p>
+    </div>
+  </div>
+</section>
+
+<section class="map-section">
+  <div class="map-section-inner">
+    <div class="section-num">02 · The area</div>
+    <h2 class="section-title">A pocket of south-west Avondale.<br><span class="yellow-block">Small enough to walk.</span></h2>
+    <div class="map-wrap map-wrap-large">
+      <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
+    </div>
+    <p class="map-caption">Bounded by Belmont · Diversey · Pulaski · Milwaukee — about 30 walkable blocks in south-west Avondale.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-num">03 · Get involved</div>
+  <h2 class="section-title">Pick a side.<br><span class="yellow-block">Or pick both.</span></h2>
+
+  <div class="cta-two">
+    <div>
+      <div class="grid-item-num">For sellers</div>
+      <h3 class="grid-item-title">Have stuff to move?</h3>
+      <p class="grid-item-body" style="margin-bottom: 24px;">Register your address by <strong>July 3</strong> to be added to the digital map. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
+      <a href="/register" class="btn btn-dark">Register your sale →</a>
+    </div>
+    <div>
+      <div class="grid-item-num">For shoppers</div>
+      <h3 class="grid-item-title">Coming to browse?</h3>
+      <p class="grid-item-body" style="margin-bottom: 24px;">No registration needed — just show up. The digital map and a few tips on parking, transit, and payment are over here so your Saturday goes smoothly.</p>
+      <a href="/shop" class="btn btn-outline">Read the guide →</a>
+    </div>
+  </div>
+</section>
+
+<div class="stripe"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Avondale <span class="yellow">Garage Sale</span></div>
+      <div class="footer-tagline">Run by neighbors · Free to join</div>
+    </div>
+    <div>
+      <h4>The event</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/permit">Permit</a></li>
+        <li><a href="/shop">Shoppers</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get in touch</h4>
+      <ul>
+        <li><a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Avondale Garage Sale</span>
+    <span>Made on Davlin Ct</span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var toggle = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('primary-nav');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function() {
+      var open = menu.classList.toggle('open');
+      toggle.classList.toggle('wiggle', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<script>
+  (function() {
+    var mapEl = document.getElementById('boundary-map');
+    if (!mapEl || typeof mapboxgl === 'undefined') return;
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFubnltYWxsZXIiLCJhIjoiY21wY3RiYWtrMDJuOTJxb2RibG95dzI0aSJ9.slYxHExWPCCAaYkGxuSizw';
+
+    var boundary = [
+      [-87.7272, 41.9391], // NW: Belmont & Pulaski
+      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
+      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
+      [-87.7271, 41.9317], // SW: Diversey & Pulaski
+      [-87.7272, 41.9391]  // close polygon
+    ];
+
+    var samplePin = [-87.7256, 41.9357]; // 3021 N Davlin Ct (sample)
+
+    var map = new mapboxgl.Map({
+      container: 'boundary-map',
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [-87.7195, 41.9355],
+      zoom: 13.2,
+      attributionControl: { compact: true }
+    });
+
+    map.scrollZoom.disable();
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+    // Force a resize after the next frame to handle aspect-ratio containers
+    requestAnimationFrame(function() { map.resize(); });
+    // And again after fonts/layout settle
+    window.addEventListener('load', function() { map.resize(); });
+
+    map.on('load', function() {
+      // Boundary polygon — yellow fill, ink stroke
+      map.addSource('boundary', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: { type: 'Polygon', coordinates: [boundary] }
+        }
+      });
+      map.addLayer({
+        id: 'boundary-fill',
+        type: 'fill',
+        source: 'boundary',
+        paint: { 'fill-color': '#f4b71b', 'fill-opacity': 0.25 }
+      });
+      map.addLayer({
+        id: 'boundary-line',
+        type: 'line',
+        source: 'boundary',
+        paint: { 'line-color': '#1a1410', 'line-width': 3 }
+      });
+
+      // Sample seller pin
+      var el = document.createElement('div');
+      el.className = 'map-park-marker';
+      new mapboxgl.Marker({ element: el, anchor: 'center' })
+        .setLngLat(samplePin)
+        .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
+          .setHTML('<strong>Sample seller</strong>Real registered addresses will appear here as people sign up.'))
+        .addTo(map);
+
+      // Final resize to ensure full render
+      map.resize();
+    });
+  })();
+</script>
+</body>
+</html>

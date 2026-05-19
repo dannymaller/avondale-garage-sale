@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register your sale — Avondale Garage Sale</title>
+<meta name="description" content="Sign up to host a garage sale during the Avondale neighborhood-wide event. Free, takes 2 minutes.">
+<link rel="stylesheet" href="styles.css">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGYSED0BC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EBGYSED0BC');
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Avondale <span class="yellow">Garage Sale</span></a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <ellipse cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <rect x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
+        <path d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/register" class="active">Register</a></li>
+      <li><a href="/permit">Permit</a></li>
+      <li><a href="/shop">Shoppers</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="stripe"></div>
+
+<header class="page-header">
+  <div class="section-num">Sellers</div>
+  <h1>Register <span class="yellow">your sale.</span></h1>
+  <p>Free. Open to anyone within the boundary. Takes about two minutes. Deadline to be added to the digital map is July 3.</p>
+</header>
+
+<div class="stripe"></div>
+
+<main class="form-page">
+
+  <p class="form-intro">
+    Fill this out and we'll add your address to the official garage sale map. You don't need to commit to specific items, hours, or pricing — that's all up to you. We just need to know where to send the shoppers.
+  </p>
+
+  <p class="form-intro callout">
+    <strong>Note on permits:</strong> Chicago requires a free garage sale permit from your ward alderman's office. It takes about 5 minutes in person — <a href="/permit">here's how to get one</a>.
+  </p>
+
+  <div id="form-success" class="form-success" hidden>
+    <div class="form-success-num">Step 1 of 2 complete</div>
+    <h2>You're on the map.</h2>
+    <p>Thanks for registering — we'll add your address to the official garage sale map. Now there's one more thing you need to do:</p>
+
+    <div class="form-success-next">
+      <div class="form-success-next-num">Next →</div>
+      <h3>Get your city permit</h3>
+      <p>Chicago requires every household holding a sale to have a free permit. Takes about 5 minutes at your ward office. <strong>Grab yours by Thursday, July 16</strong> so you're ready for the event.</p>
+      <a href="/permit" class="btn btn-yellow">How to get your permit →</a>
+    </div>
+
+    <p class="form-success-footer">We'll also email you a reminder closer to the event with the final map and any updates.</p>
+  </div>
+
+  <div id="form-error" class="form-error" hidden>
+    <strong>Something went wrong.</strong> <span id="form-error-msg">Please try again, or email <a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a> directly.</span>
+  </div>
+
+  <form id="register-form" class="form" novalidate>
+
+    <div class="form-field">
+      <label for="name">Your name</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+      <p class="hint">We'll only use this to send event updates and the final map.</p>
+    </div>
+
+    <div class="form-field">
+      <label for="address">Street address</label>
+      <input type="text" id="address" name="address" placeholder="e.g. 3021 N Davlin Ct" required>
+      <p class="hint">Must be inside the boundary — see the map on the About page.</p>
+    </div>
+
+    <div class="form-field">
+      <label for="phone">Phone (optional)</label>
+      <input type="tel" id="phone" name="phone">
+      <p class="hint">In case we need to reach you on event day.</p>
+    </div>
+
+    <div class="form-field">
+      <label for="sale_type">What kind of sale?</label>
+      <select id="sale_type" name="sale_type" required>
+        <option value="">Pick one…</option>
+        <option>Garage / driveway</option>
+        <option>Front yard / stoop</option>
+        <option>Alley</option>
+        <option>Multi-family / block sale</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="categories">What will you be selling?</label>
+      <textarea id="categories" name="categories" placeholder="e.g. kids' clothes, vinyl records, kitchen stuff, plants, vintage furniture…"></textarea>
+      <p class="hint">A short list helps us tag your spot on the map so shoppers can plan a route. Doesn't need to be exhaustive.</p>
+    </div>
+
+    <div class="form-field">
+      <label for="hours">Your hours that day</label>
+      <input type="text" id="hours" name="hours" placeholder="e.g. 10am to 2pm">
+      <p class="hint">Standard event hours are 10am–4pm but you can do shorter.</p>
+    </div>
+
+    <div class="form-field">
+      <label for="notes">Anything else?</label>
+      <textarea id="notes" name="notes" placeholder="Accessibility info, dogs on the property, kids welcome, etc."></textarea>
+    </div>
+
+    <div class="form-field-checkbox">
+      <input type="checkbox" id="agree" name="agree" required>
+      <label for="agree">I understand that hosting a sale is my own responsibility. I'll keep my space tidy, take down signs by end of day, and be respectful of neighbors.</label>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <button type="submit" id="submit-btn" class="btn btn-dark" style="width: 100%; padding: 20px;">Submit registration →</button>
+    </div>
+
+  </form>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Avondale <span class="yellow">Garage Sale</span></div>
+      <div class="footer-tagline">Run by neighbors · Free to join</div>
+    </div>
+    <div>
+      <h4>The event</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/permit">Permit</a></li>
+        <li><a href="/shop">Shoppers</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get in touch</h4>
+      <ul>
+        <li><a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Avondale Garage Sale</span>
+    <span>Made on Davlin Ct</span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var toggle = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('primary-nav');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function() {
+      var open = menu.classList.toggle('open');
+      toggle.classList.toggle('wiggle', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script>
+  (function() {
+    var ENDPOINT = 'https://script.google.com/macros/s/AKfycbw5dS-PHxSwjkmWnkG-teXyNSa1lwaJE6txySoOnOjoPdhSrycL18X4x3wOl5nHMjlP/exec';
+
+    var form = document.getElementById('register-form');
+    if (!form) return;
+    var submitBtn = document.getElementById('submit-btn');
+    var successBox = document.getElementById('form-success');
+    var errorBox = document.getElementById('form-error');
+    var errorMsg = document.getElementById('form-error-msg');
+
+    function showError(msg) {
+      if (msg) errorMsg.textContent = msg;
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideError() {
+      errorBox.hidden = true;
+    }
+
+    function getValues() {
+      var fd = new FormData(form);
+      return {
+        name: (fd.get('name') || '').trim(),
+        email: (fd.get('email') || '').trim(),
+        address: (fd.get('address') || '').trim(),
+        phone: (fd.get('phone') || '').trim(),
+        sale_type: (fd.get('sale_type') || '').trim(),
+        categories: (fd.get('categories') || '').trim(),
+        hours: (fd.get('hours') || '').trim(),
+        notes: (fd.get('notes') || '').trim(),
+        agree: fd.get('agree') === 'on'
+      };
+    }
+
+    function validate(data) {
+      if (!data.name) return 'Please add your name.';
+      if (!data.email) return 'Please add your email.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return 'That email looks off — please check it.';
+      if (!data.address) return 'Please add your street address.';
+      if (!data.sale_type) return 'Please pick a sale type.';
+      if (!data.agree) return 'Please check the agreement box at the bottom.';
+      return null;
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      hideError();
+
+      var data = getValues();
+      var validationError = validate(data);
+      if (validationError) {
+        showError(validationError);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      var originalLabel = submitBtn.textContent;
+      submitBtn.textContent = 'Submitting…';
+
+      // Google Apps Script web apps don't return CORS headers, so we use
+      // text/plain to avoid a preflight, and parse the response as JSON.
+      fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(json) {
+        if (json && json.ok) {
+          form.hidden = true;
+          successBox.hidden = false;
+          successBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          throw new Error((json && json.error) || 'Unknown error');
+        }
+      })
+      .catch(function(err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+        showError('Submission failed. Please try again, or email danny.maller@gmail.com directly.');
+        console.error('Form error:', err);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

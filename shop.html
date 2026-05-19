@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoppers — Avondale Garage Sale</title>
+<meta name="description" content="How to get to the Avondale neighborhood garage sale, where to park, what to bring, and how to plan your route.">
+<link rel="stylesheet" href="styles.css">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGYSED0BC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EBGYSED0BC');
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Avondale <span class="yellow">Garage Sale</span></a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <ellipse cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+        <rect x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
+        <path d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/register">Register</a></li>
+        <li><a href="/permit">Permit</a></li>
+      <li><a href="/shop" class="active">Shoppers</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="stripe"></div>
+
+<header class="page-header">
+  <div class="section-num">Shoppers</div>
+  <h1>Plan your <span class="yellow">route.</span></h1>
+  <p>A few things worth knowing before Saturday morning. Read it, screenshot it, share it with the friend you're dragging along.</p>
+</header>
+
+<div class="stripe"></div>
+
+<main class="prose">
+
+  <h2>The map</h2>
+  <p>The digital map of all participating addresses goes live about a week before the event. Pull it up on your phone Saturday morning, see who's open and what they're selling, and plan your loop. The map will be the same one you used to plan, just live and zoomable.</p>
+
+  <div class="map-wrap map-wrap-large" style="margin: 32px 0 56px;">
+    <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
+  </div>
+
+  <h2>Getting here</h2>
+
+  <ol class="info-list">
+    <li>
+      <div>
+        <h3>Don't drive into the neighborhood.</h3>
+        <p>The sale spans about 30 blocks and parking is residential. Pedestrian traffic will be heavy. If you drive, park on a major street outside the boundary (Pulaski, Belmont, Diversey) and walk in.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h3>Take the Blue Line.</h3>
+        <p>The Belmont stop puts you right at the southeast corner of the sale area. From there it's a 5-minute walk to the heart of the action.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h3>Bus options.</h3>
+        <p>The 77 Belmont, 76 Diversey, and 53 Pulaski all run along the boundary streets. Hop off anywhere and walk in.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h3>Biking is great.</h3>
+        <p>Side streets are quiet. Bring a lock. Most yards have somewhere to park a bike. Just don't try to haul a couch on it.</p>
+      </div>
+    </li>
+  </ol>
+
+  <h2>What to bring</h2>
+  <ul>
+    <li><strong>Cash, small bills.</strong> Many sellers can do Venmo, Zelle, or Cash App, but cash is fastest. Bring fives and singles — nobody wants to make change for a hundred at 10am.</li>
+    <li><strong>Bags or a tote.</strong> Big ones. A wagon or folding cart if you're serious.</li>
+    <li><strong>Comfortable shoes.</strong> You will walk more than you think.</li>
+    <li><strong>A measuring tape.</strong> If you're hunting furniture, this saves you from the "wait, does it fit in my apartment" disaster.</li>
+    <li><strong>Phone, charged.</strong> For the map, for paying, for snapping the chair you want to think about for ten minutes.</li>
+  </ul>
+
+  <h2>Etiquette</h2>
+  <ul>
+    <li><strong>Haggle gently.</strong> Sellers price low already. A polite offer is welcome; a lowball is rude.</li>
+    <li><strong>Don't show up at 8am.</strong> Sale starts at 10. Sellers are setting up.</li>
+    <li><strong>Watch the kids and dogs.</strong> Streets get busy. Keep an eye out.</li>
+    <li><strong>Take your trash with you.</strong> If you crack open a coffee, the cup goes home with you, not in someone's yard.</li>
+  </ul>
+
+  <p style="margin-top: 48px;">Questions before the day? Email <a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a>.</p>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Avondale <span class="yellow">Garage Sale</span></div>
+      <div class="footer-tagline">Run by neighbors · Free to join</div>
+    </div>
+    <div>
+      <h4>The event</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/permit">Permit</a></li>
+        <li><a href="/shop">Shoppers</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get in touch</h4>
+      <ul>
+        <li><a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Avondale Garage Sale</span>
+    <span>Made on Davlin Ct</span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var toggle = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('primary-nav');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function() {
+      var open = menu.classList.toggle('open');
+      toggle.classList.toggle('wiggle', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<script>
+  (function() {
+    var mapEl = document.getElementById('boundary-map');
+    if (!mapEl || typeof mapboxgl === 'undefined') return;
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFubnltYWxsZXIiLCJhIjoiY21wY3RiYWtrMDJuOTJxb2RibG95dzI0aSJ9.slYxHExWPCCAaYkGxuSizw';
+
+    var boundary = [
+      [-87.7272, 41.9391], // NW: Belmont & Pulaski
+      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
+      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
+      [-87.7271, 41.9317], // SW: Diversey & Pulaski
+      [-87.7272, 41.9391]
+    ];
+
+    var samplePin = [-87.7256, 41.9357]; // 3021 N Davlin Ct (sample)
+
+    var map = new mapboxgl.Map({
+      container: 'boundary-map',
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [-87.7195, 41.9355],
+      zoom: 13.2,
+      attributionControl: { compact: true }
+    });
+
+    map.scrollZoom.disable();
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+    requestAnimationFrame(function() { map.resize(); });
+    window.addEventListener('load', function() { map.resize(); });
+
+    map.on('load', function() {
+      map.addSource('boundary', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: { type: 'Polygon', coordinates: [boundary] }
+        }
+      });
+      map.addLayer({
+        id: 'boundary-fill',
+        type: 'fill',
+        source: 'boundary',
+        paint: { 'fill-color': '#f4b71b', 'fill-opacity': 0.25 }
+      });
+      map.addLayer({
+        id: 'boundary-line',
+        type: 'line',
+        source: 'boundary',
+        paint: { 'line-color': '#1a1410', 'line-width': 3 }
+      });
+
+      var el = document.createElement('div');
+      el.className = 'map-park-marker';
+      new mapboxgl.Marker({ element: el, anchor: 'center' })
+        .setLngLat(samplePin)
+        .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
+          .setHTML('<strong>Sample seller</strong>Real registered addresses will appear here as people sign up.'))
+        .addTo(map);
+
+      map.resize();
+    });
+  })();
+</script>
+</body>
+</html>
