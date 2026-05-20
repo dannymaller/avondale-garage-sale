@@ -1063,31 +1063,24 @@ a:hover { color: var(--ink); }
 /* PERMIT — ward selection cards */
 .permit-wards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0;
   border: 2px solid var(--ink);
   margin: 24px 0 32px;
 }
 
 .permit-wards-single {
-  grid-template-columns: 1fr;
   max-width: 480px;
 }
 
 .permit-ward {
-  padding: 28px 24px;
+  padding: 28px 28px;
   background: var(--cream);
-  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
 }
 
 .permit-ward:last-child {
-  border-right: none;
-}
-
-@media (max-width: 720px) {
-  .permit-wards { grid-template-columns: 1fr; }
-  .permit-ward { border-right: none; border-bottom: 2px solid var(--ink); }
-  .permit-ward:last-child { border-bottom: none; }
+  border-bottom: none;
 }
 
 .permit-ward-num {

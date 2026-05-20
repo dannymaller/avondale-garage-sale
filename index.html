@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Avondale Garage Sale — Save the date</title>
+<title>Avondale Garage Sale | Save the date</title>
 <meta name="description" content="A neighborhood-wide garage sale in Chicago's Avondale. One Saturday, dozens of households, every kind of bargain.">
 <link rel="stylesheet" href="styles.css">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
@@ -49,7 +49,7 @@
   <div class="hero-fan">
     <span class="dark">Saturday</span>
     <span>July 18, 2026</span>
-    <span class="green">10am — 4pm</span>
+    <span class="green">10am to 4pm</span>
     <span class="dark">Rain or shine</span>
   </div>
 
@@ -97,7 +97,7 @@
     <div class="map-wrap map-wrap-large">
       <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
     </div>
-    <p class="map-caption">Our year-one target: about 30 walkable blocks between Belmont, Diversey, Pulaski, and Milwaukee. Live elsewhere in Avondale? <a href="/register">Sign up anyway</a> — it helps us figure out where to grow.</p>
+    <p class="map-caption">Our year-one target: about 30 walkable blocks between Belmont, Diversey, Pulaski, and Milwaukee. Live elsewhere in Avondale? <a href="/register">Sign up anyway</a>. It helps us figure out where to grow.</p>
   </div>
 </section>
 
@@ -115,7 +115,7 @@
     <div>
       <div class="grid-item-num">For shoppers</div>
       <h3 class="grid-item-title">Coming to browse?</h3>
-      <p class="grid-item-body" style="margin-bottom: 24px;">No registration needed — just show up. The digital map and a few tips on parking, transit, and payment are over here so your Saturday goes smoothly.</p>
+      <p class="grid-item-body" style="margin-bottom: 24px;">No registration needed, just show up. The digital map and a few tips on parking, transit, and payment are over here so your Saturday goes smoothly.</p>
       <a href="/shop" class="btn btn-outline">Read the guide →</a>
     </div>
   </div>
@@ -203,7 +203,7 @@
     window.addEventListener('load', function() { map.resize(); });
 
     map.on('load', function() {
-      // Boundary polygon — yellow fill, ink stroke
+      // Boundary polygon: yellow fill, ink stroke
       map.addSource('boundary', {
         type: 'geojson',
         data: {

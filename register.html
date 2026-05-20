@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register your sale — Avondale Garage Sale</title>
+<title>Register your sale | Avondale Garage Sale</title>
 <meta name="description" content="Sign up to host a garage sale during the Avondale neighborhood-wide event. Free, takes 2 minutes.">
 <link rel="stylesheet" href="styles.css">
 <!-- Google tag (gtag.js) -->
@@ -51,17 +51,17 @@
 <main class="form-page">
 
   <p class="form-intro">
-    Fill this out and we'll add your address to the official garage sale map. You don't need to commit to specific items, hours, or pricing — that's all up to you. We just need to know where to send the shoppers.
+    Fill this out and we'll add your address to the official garage sale map. You don't need to commit to specific items, hours, or pricing. That's all up to you. We just need to know where to send the shoppers.
   </p>
 
   <p class="form-intro callout">
-    <strong>Note on permits:</strong> Chicago requires a free garage sale permit from your ward alderman's office. It takes about 5 minutes in person — <a href="/permit">here's how to get one</a>.
+    <strong>Note on permits:</strong> Chicago requires a free garage sale permit from your ward alderman's office. It takes about 5 minutes in person. <a href="/permit">Here's how to get one</a>.
   </p>
 
   <div id="form-success" class="form-success" hidden>
     <div class="form-success-num">Step 1 of 2 complete</div>
     <h2>You're on the map.</h2>
-    <p>Thanks for registering — we'll add your address to the official garage sale map. Now there's one more thing you need to do:</p>
+    <p>Thanks for registering. We'll add your address to the official garage sale map. Now there's one more thing you need to do:</p>
 
     <div class="form-success-next">
       <div class="form-success-next-num">Next →</div>
@@ -228,7 +228,7 @@
     function validate(data) {
       if (!data.name) return 'Please add your name.';
       if (!data.email) return 'Please add your email.';
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return 'That email looks off — please check it.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return 'That email looks off. Please check it.';
       if (!data.address) return 'Please add your street address.';
       if (!data.sale_type) return 'Please pick a sale type.';
       if (!data.agree) return 'Please check the agreement box at the bottom.';
