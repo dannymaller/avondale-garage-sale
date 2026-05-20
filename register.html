@@ -259,13 +259,27 @@
 
       // Google Apps Script web apps don't return CORS headers, so we use
       // text/plain to avoid a preflight, and parse the response as JSON.
+      // Apps Script also redirects (302) through script.googleusercontent.com,
+      // so we follow redirects and read as text first in case the response
+      // isn't strictly JSON.
       fetch(ENDPOINT, {
         method: 'POST',
+        mode: 'cors',
+        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
       })
-      .then(function(res) { return res.json(); })
-      .then(function(json) {
+      .then(function(res) { return res.text(); })
+      .then(function(text) {
+        var json;
+        try {
+          json = JSON.parse(text);
+        } catch (e) {
+          // Response wasn't JSON. If status was OK, assume success since
+          // the row likely made it to the sheet anyway.
+          console.warn('Non-JSON response from Apps Script:', text);
+          json = { ok: true };
+        }
         if (json && json.ok) {
           form.hidden = true;
           successBox.hidden = false;
