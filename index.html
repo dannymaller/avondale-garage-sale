@@ -6,7 +6,7 @@
 <title>Avondale Garage Sale | Save the date</title>
 <meta name="description" content="A neighborhood-wide garage sale in Chicago's Avondale. One Saturday, dozens of households, every kind of bargain.">
 <link rel="stylesheet" href="styles.css">
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.css" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBGYSED0BC"></script>
 <script>
@@ -171,11 +171,21 @@
   })();
 </script>
 
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.js"></script>
 <script>
   (function() {
     var mapEl = document.getElementById('boundary-map');
     if (!mapEl || typeof mapboxgl === 'undefined') return;
+
+    // Check WebGL2 support (Mapbox GL JS v3 requires WebGL2)
+    if (typeof mapboxgl.supported === 'function' && !mapboxgl.supported()) {
+      mapEl.innerHTML = '<div class="map-fallback">' +
+        '<strong>Map can\'t load in this browser</strong>' +
+        'Your browser doesn\'t support the map graphics needed. ' +
+        'Try the latest Chrome, Firefox, or Edge, or make sure hardware acceleration is enabled in your browser settings.' +
+        '</div>';
+      return;
+    }
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiZGFubnltYWxsZXIiLCJhIjoiY21wY3RiYWtrMDJuOTJxb2RibG95dzI0aSJ9.slYxHExWPCCAaYkGxuSizw';
 
@@ -197,6 +207,10 @@
       center: [-87.7195, 41.9355],
       zoom: 13.2,
       attributionControl: { compact: true }
+    });
+
+    map.on('error', function(e) {
+      console.error('Mapbox error:', e && e.error ? e.error : e);
     });
 
     map.scrollZoom.disable();
