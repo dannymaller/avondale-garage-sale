@@ -637,17 +637,21 @@ a:hover { color: var(--ink); }
 
 .form-field-checkbox {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: flex-start;
-  padding: 16px;
+  padding: 18px 20px;
   border: 2px solid var(--ink);
   background: var(--cream);
+  cursor: pointer;
 }
 
 .form-field-checkbox input {
-  margin-top: 4px;
+  margin-top: 2px;
   flex-shrink: 0;
-  width: auto;
+  width: 24px;
+  height: 24px;
+  accent-color: var(--ink);
+  cursor: pointer;
 }
 
 .form-field-checkbox label {
@@ -655,8 +659,26 @@ a:hover { color: var(--ink); }
   letter-spacing: 0;
   font-family: var(--sans);
   font-size: 17px;
+  line-height: 1.5;
   color: var(--ink);
   font-weight: 400;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .form-field-checkbox {
+    gap: 18px;
+    padding: 20px 22px;
+  }
+  .form-field-checkbox input {
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+  }
+  .form-field-checkbox label {
+    font-size: 18px;
+    line-height: 1.5;
+  }
 }
 
 /* FOOTER */
