@@ -176,7 +176,9 @@
       [-87.7272, 41.9391]
     ];
 
-    var samplePin = [-87.7256, 41.9357]; // 3021 N Davlin Ct (sample)
+    var sellers = [
+      { coords: [-87.7261, 41.9338], address: '3934 W George St', name: 'Registered seller' }
+    ];
 
     var map = new mapboxgl.Map({
       container: 'boundary-map',
@@ -213,13 +215,15 @@
         paint: { 'line-color': '#1a1410', 'line-width': 3 }
       });
 
-      var el = document.createElement('div');
-      el.className = 'map-park-marker';
-      new mapboxgl.Marker({ element: el, anchor: 'center' })
-        .setLngLat(samplePin)
-        .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
-          .setHTML('<strong>Sample seller</strong>Real registered addresses will appear here as people sign up.'))
-        .addTo(map);
+      sellers.forEach(function(seller) {
+        var el = document.createElement('div');
+        el.className = 'map-park-marker';
+        new mapboxgl.Marker({ element: el, anchor: 'center' })
+          .setLngLat(seller.coords)
+          .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
+            .setHTML('<strong>' + seller.name + '</strong>' + seller.address))
+          .addTo(map);
+      });
 
       map.resize();
     });
