@@ -22,15 +22,18 @@
   <div class="nav-inner">
     <a href="/" class="nav-logo">Avondale <span class="yellow">Garage Sale</span></a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- bottom bun -->
-        <ellipse cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
-        <!-- sausage -->
-        <ellipse cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
-        <rect x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
-        <!-- top bun -->
-        <!-- mustard squiggle -->
-        <path d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="hotdog-icon">
+        <g class="hotdog-lines">
+          <rect x="6" y="12" width="52" height="4" rx="2" fill="#f4b71b"/>
+          <rect x="6" y="30" width="52" height="4" rx="2" fill="#f4b71b"/>
+          <rect x="6" y="48" width="52" height="4" rx="2" fill="#f4b71b"/>
+        </g>
+        <g class="hotdog-shape">
+          <ellipse class="bun-bottom" cx="32" cy="42" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+          <ellipse class="bun-top" cx="32" cy="22" rx="26" ry="10" fill="#f4b71b" stroke="#1a1410" stroke-width="3"/>
+          <rect class="sausage" x="8" y="22" width="48" height="18" rx="9" fill="#d33829" stroke="#1a1410" stroke-width="3"/>
+          <path class="mustard" d="M 12 30 Q 16 26 20 30 T 28 30 T 36 30 T 44 30 T 52 30" fill="none" stroke="#f4b71b" stroke-width="3" stroke-linecap="round"/>
+        </g>
       </svg>
     </button>
     <ul class="nav-links" id="primary-nav">
