@@ -589,6 +589,7 @@ a:hover { color: var(--ink); }
 }
 
 .form { display: grid; gap: 24px; }
+.form[hidden] { display: none; }
 
 .form-field { display: grid; gap: 8px; }
 

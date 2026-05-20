@@ -279,6 +279,10 @@
           console.warn('Non-JSON response from Apps Script:', text);
           json = { ok: true };
         }
+        // Always reset the button state (defensive — form hides on success
+        // but if anything keeps it visible, this prevents a stuck "Submitting…")
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
         if (json && json.ok) {
           form.hidden = true;
           successBox.hidden = false;
