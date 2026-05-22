@@ -205,10 +205,6 @@
       [-87.7272, 41.9391]
     ];
 
-    var sellers = [
-      { coords: [-87.7261, 41.9338], address: '3934 W George St', name: 'Registered seller' }
-    ];
-
     var map = new mapboxgl.Map({
       container: 'boundary-map',
       style: 'mapbox://styles/mapbox/light-v11',
@@ -248,15 +244,30 @@
         paint: { 'line-color': '#1a1410', 'line-width': 3 }
       });
 
-      sellers.forEach(function(seller) {
-        var el = document.createElement('div');
-        el.className = 'map-park-marker';
-        new mapboxgl.Marker({ element: el, anchor: 'center' })
-          .setLngLat(seller.coords)
-          .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
-            .setHTML('<strong>' + seller.name + '</strong>' + seller.address))
-          .addTo(map);
-      });
+      // Fetch live sellers from the Google Sheet (via Apps Script endpoint)
+      fetch('https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers')
+        .then(function(res) { return res.text(); })
+        .then(function(text) {
+          var data;
+          try { data = JSON.parse(text); } catch (e) {
+            console.warn('Could not parse sellers JSON:', e);
+            return;
+          }
+          var sellers = (data && data.sellers) || [];
+          sellers.forEach(function(seller) {
+            if (!seller.coords || seller.coords.length !== 2) return;
+            var el = document.createElement('div');
+            el.className = 'map-park-marker';
+            new mapboxgl.Marker({ element: el, anchor: 'center' })
+              .setLngLat(seller.coords)
+              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
+                .setHTML('<strong>Registered seller</strong>' + seller.address))
+              .addTo(map);
+          });
+        })
+        .catch(function(err) {
+          console.warn('Could not load sellers:', err);
+        });
 
       map.resize();
     });
