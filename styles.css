@@ -40,6 +40,43 @@ a {
 
 a:hover { color: var(--ink); }
 
+/* TRANSLATE BAR (top of every page) */
+.translate-bar {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(244, 235, 210, 0.15);
+}
+
+.translate-bar span[lang] {
+  display: inline-block;
+}
+
+.translate-sep {
+  margin: 0 12px;
+  opacity: 0.5;
+}
+
+@media (max-width: 720px) {
+  .translate-bar {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .translate-bar .translate-sep {
+    display: none;
+  }
+  .translate-bar span[lang] {
+    display: block;
+  }
+  .translate-bar span[lang="pl"] {
+    margin-top: 4px;
+  }
+}
+
 /* HAZARD STRIPE */
 .stripe {
   height: 14px;
@@ -735,6 +772,27 @@ a:hover { color: var(--ink); }
 }
 
 .footer ul { list-style: none; display: grid; gap: 8px; }
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.social-icon svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.social-icon:hover svg {
+  color: var(--yellow);
+}
+
+.social-icon-label {
+  text-decoration: none;
+}
 
 .footer ul a {
   text-decoration: none;
