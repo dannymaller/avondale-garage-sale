@@ -201,102 +201,68 @@
   /* Sponsors section. Move to styles.css whenever you want. */
   .sponsors-intro {
     max-width: 640px;
-    margin: 0 auto 40px;
-    text-align: center;
-    font-size: 17px;
+    margin: 0 0 56px;
+    font-size: 18px;
     line-height: 1.55;
   }
   .sponsor-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 28px;
-    max-width: 960px;
-    margin: 0 auto;
+    gap: 56px;
+    align-items: start;
   }
-  @media (min-width: 760px) {
+  @media (min-width: 800px) {
     .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
-    .sponsor-grid .sponsor-card:only-child {
-      grid-column: 1 / -1;
-      max-width: 640px;
-      margin: 0 auto;
-    }
   }
-  .sponsor-card {
-    background: #fff;
-    border: 3px solid #1a1410;
-    border-radius: 10px;
-    padding: 28px;
-    box-shadow: 6px 6px 0 #1a1410;
-    display: flex;
-    flex-direction: column;
-  }
-  .sponsor-card-tag {
-    display: inline-block;
-    align-self: flex-start;
-    background: #f4b71b;
-    color: #1a1410;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 4px 10px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-  }
-  .sponsor-card-logo {
-    background: #fff;
-    border: 2px solid #1a1410;
-    border-radius: 6px;
-    padding: 28px 20px;
+  .sponsor-logo-box {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #fff;
+    border: 3px solid #1a1410;
+    box-shadow: 6px 6px 0 #1a1410;
+    padding: 32px 24px;
     margin-bottom: 24px;
-    min-height: 120px;
+    min-height: 140px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .sponsor-card-logo img {
+  .sponsor-logo-box:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #d33829;
+  }
+  .sponsor-logo-box:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #1a1410;
+  }
+  .sponsor-logo-box img {
     max-width: 100%;
-    height: auto;
     max-height: 80px;
+    height: auto;
     display: block;
   }
-  .sponsor-card-name {
-    font-size: 22px;
+  .sponsor-credit {
     font-weight: 800;
-    margin: 0 0 14px;
-    color: #1a1410;
-    line-height: 1.2;
-  }
-  .sponsor-card-body {
-    font-size: 16px;
-    line-height: 1.55;
-    color: #1a1410;
-    margin: 0 0 18px;
-  }
-  .sponsor-card-credit {
-    font-size: 14px;
-    color: #1a1410;
-    margin: 0;
-    padding-top: 16px;
-    border-top: 2px dashed #1a1410;
+    margin-bottom: 24px;
   }
 </style>
 
 <section class="section sponsors">
   <div class="section-num">04 · Thanks</div>
   <h2 class="section-title">A special thank you to<br><span class="yellow-block">our sponsors.</span></h2>
+
   <p class="sponsors-intro">Local businesses help cover the cost of flyers, yard signs, and other materials so the sale stays free to join. Want to sponsor? Get in touch.</p>
 
   <div class="sponsor-grid">
-    <article class="sponsor-card">
-      <span class="sponsor-card-tag">Sponsor</span>
-      <div class="sponsor-card-logo">
+    <div>
+      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="sponsor-logo-box" aria-label="Visit Act Now Print &amp; Promote">
         <img src="/assets/actnow-logo.svg" alt="Act Now Print &amp; Promote" loading="lazy">
-      </div>
-      <h3 class="sponsor-card-name">Act Now Print &amp; Promote</h3>
-      <p class="sponsor-card-body">Full-service custom printer with a location in Avondale at 3130 N Rockwell St. They specialize in branded apparel, large format signage, promotional products, and traditional paper printing.</p>
-      <p class="sponsor-card-credit"><strong>Providing yard signs and flyers for the event.</strong></p>
-    </article>
+      </a>
+      <div class="grid-item-num">Sponsor</div>
+      <h3 class="grid-item-title">Act Now Print &amp; Promote</h3>
+      <p class="grid-item-body">Full-service custom printer with a location in Avondale at 3130 N Rockwell St. They specialize in branded apparel, large format signage, promotional products, and traditional paper printing.</p>
+      <p class="grid-item-body sponsor-credit">Providing yard signs and flyers for the event.</p>
+      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="btn btn-outline">Visit their site →</a>
+    </div>
   </div>
 </section>
 
