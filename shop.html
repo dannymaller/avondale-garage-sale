@@ -86,6 +86,7 @@
   <h2>The map</h2>
   <p>The digital map of all participating addresses goes live about a week before the event. Pull it up on your phone Saturday morning, see who's open and what they're selling, and plan your loop. The map will be the same one you used to plan, just live and zoomable.</p>
 
+  <div id="map-filter-bar" class="map-filter-bar" role="group" aria-label="Filter sellers by what they're selling"></div>
   <div class="map-wrap map-wrap-large" style="margin: 32px 0 56px;">
     <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
   </div>
@@ -264,6 +265,78 @@
         paint: { 'line-color': '#1a1410', 'line-width': 3 }
       });
 
+      // ---- Sellers + category filter (multi-select) ----
+      var allMarkers = [];      // { el, text }
+      var activeFilters = {};   // selected category ids (excludes 'all')
+
+      var FILTERS = [
+        { id: 'all',         label: 'All',              re: null },
+        { id: 'vinyl',       label: 'Vinyl & records',  re: /\b(vinyl|records?|lps?|45s?|cds?)/i },
+        { id: 'furniture',   label: 'Furniture',        re: /\b(furniture|couch|sofa|tables?|dressers?|chairs?|desks?|shelv)/i },
+        { id: 'clothing',    label: 'Clothing & shoes', re: /\b(clothes|clothing|apparel|shoes|footwear|jackets?|shirts?|ropa)/i },
+        { id: 'kids',        label: 'Kids & baby',      re: /\b(kids?|baby|toys?|strollers?|car ?seats?|cribs?|maternity|nursing|ni\u00f1)/i },
+        { id: 'tools',       label: 'Tools',            re: /\b(tools?|herramientas?|hardware|drills?)/i },
+        { id: 'home',        label: 'Home & kitchen',   re: /\b(housewares?|kitchen|home ?goods|glassware|textiles?|decor|dishes|bedding|pillows?|appliances?)/i },
+        { id: 'plants',      label: 'Plants',           re: /\b(plants?|garden)/i },
+        { id: 'electronics', label: 'Electronics',      re: /\b(electronics?|tvs?|stereos?|speakers?|vhs|dvds?)/i },
+        { id: 'books',       label: 'Books',            re: /\b(books?)/i },
+        { id: 'free',        label: 'Free stuff',       re: /\b(free)/i }
+      ];
+
+      function filterById(id) {
+        for (var i = 0; i < FILTERS.length; i++) { if (FILTERS[i].id === id) return FILTERS[i]; }
+        return null;
+      }
+      function matchesFilter(f, text) { return !f.re || f.re.test(text); }
+
+      function refreshMarkers() {
+        var ids = Object.keys(activeFilters);
+        allMarkers.forEach(function(m) {
+          var show = ids.length === 0 || ids.some(function(id) {
+            var f = filterById(id);
+            return f && matchesFilter(f, m.text);
+          });
+          m.el.style.display = show ? '' : 'none';
+        });
+        document.querySelectorAll('.map-filter-chip').forEach(function(btn) {
+          var id = btn.getAttribute('data-filter');
+          var on = id === 'all' ? ids.length === 0 : !!activeFilters[id];
+          btn.classList.toggle('is-active', on);
+        });
+      }
+
+      function toggleFilter(id) {
+        if (id === 'all') { activeFilters = {}; }
+        else if (activeFilters[id]) { delete activeFilters[id]; }
+        else { activeFilters[id] = true; }
+        refreshMarkers();
+      }
+
+      function buildFilterBar() {
+        var bar = document.getElementById('map-filter-bar');
+        if (!bar) return;
+        bar.innerHTML = '';
+        FILTERS.forEach(function(f) {
+          var count = f.id === 'all'
+            ? allMarkers.length
+            : allMarkers.filter(function(m) { return matchesFilter(f, m.text); }).length;
+          if (f.id !== 'all' && count === 0) return; // hide categories nobody is selling
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'map-filter-chip' + (f.id === 'all' ? ' is-active' : '');
+          btn.setAttribute('data-filter', f.id);
+          btn.textContent = f.label + ' (' + count + ')';
+          btn.addEventListener('click', function() { toggleFilter(f.id); });
+          bar.appendChild(btn);
+        });
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"]/g, function(c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+
       // Fetch live sellers from the Google Sheet (via Apps Script endpoint)
       fetch('https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers')
         .then(function(res) { return res.text(); })
@@ -278,12 +351,16 @@
             if (!seller.coords || seller.coords.length !== 2) return;
             var el = document.createElement('div');
             el.className = 'map-park-marker';
+            var cats = seller.categories || '';
+            var html = '<strong>Registered seller</strong>' + escapeHtml(seller.address) +
+              (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : '');
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
-              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
-                .setHTML('<strong>Registered seller</strong>' + seller.address))
+              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false }).setHTML(html))
               .addTo(map);
+            allMarkers.push({ el: el, text: cats.toLowerCase() });
           });
+          buildFilterBar();
         })
         .catch(function(err) {
           console.warn('Could not load sellers:', err);

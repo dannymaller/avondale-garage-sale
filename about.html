@@ -259,6 +259,14 @@
         paint: { 'line-color': '#1a1410', 'line-width': 3 }
       });
 
+      // ---- Sellers + category popups ----
+      // (No filter bar on this context map; the chips live on the home and shoppers maps.)
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"]/g, function(c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+
       // Fetch live sellers from the Google Sheet (via Apps Script endpoint)
       fetch('https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers')
         .then(function(res) { return res.text(); })
@@ -273,10 +281,12 @@
             if (!seller.coords || seller.coords.length !== 2) return;
             var el = document.createElement('div');
             el.className = 'map-park-marker';
+            var cats = seller.categories || '';
+            var html = '<strong>Registered seller</strong>' + escapeHtml(seller.address) +
+              (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : '');
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
-              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false })
-                .setHTML('<strong>Registered seller</strong>' + seller.address))
+              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false }).setHTML(html))
               .addTo(map);
           });
         })

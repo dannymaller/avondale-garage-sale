@@ -954,6 +954,47 @@ a:hover { color: var(--ink); }
   }
 }
 
+/* MAP CATEGORY FILTER */
+.map-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.map-filter-chip {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 14px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.map-filter-chip:hover { background: var(--yellow); }
+
+.map-filter-chip.is-active {
+  background: var(--ink);
+  color: var(--yellow);
+}
+
+/* Categories line inside the dark seller popup */
+.map-canvas .mapboxgl-popup-content .popup-cats {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--cream);
+  opacity: 0.8;
+}
+
 .map-section {
   max-width: 1240px;
   margin: 0 auto;
