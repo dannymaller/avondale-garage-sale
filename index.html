@@ -155,6 +155,31 @@
     <a href="#the-area" class="btn btn-yellow dayof-btn">Open the live map →</a>
   </div>
 
+  <div class="postwrap" id="postwrap" hidden>
+    <div class="dayof-head">See you<br><span class="go">next year</span></div>
+    <p class="post-sub">That's a wrap on 2026. Want in on the 2027 sale? Drop your info and we'll email you when registration opens.</p>
+    <form id="form-2027" class="post-form" novalidate>
+      <div class="form-field">
+        <label for="nx-name">Name</label>
+        <input id="nx-name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="form-field">
+        <label for="nx-email">Email</label>
+        <input id="nx-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="form-field">
+        <label for="nx-interest">Next year I want to&hellip;</label>
+        <select id="nx-interest" name="interest">
+          <option>Host a sale</option>
+          <option>Shop</option>
+          <option>Both</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-yellow" id="nx-submit">Sign me up →</button>
+      <p class="post-form-msg" id="nx-msg" hidden></p>
+    </form>
+  </div>
+
   <p class="hero-sub">Neighbors opening up at once. One walking loop. Every kind of treasure you didn't know you needed.</p>
 
   <div class="hero-cta-row">
@@ -404,13 +429,26 @@
 
     function showPost() {
       splash.hidden = true;
+      countdown.hidden = true;
       if (confetti) { confetti.hidden = true; confetti.innerHTML = ''; }
       confettiOn = false;
-      if (hostBtn) hostBtn.style.display = 'none';
-      countdown.hidden = false;
-      nums.innerHTML = '<span class="cd-msg">See you next year</span>';
-      var cal = document.getElementById('add-to-cal');
-      if (cal) cal.style.display = 'none';
+      // strip the page down to the essentials
+      document.querySelectorAll('.section, .map-section, .stripe, .hero-fan, .hero-sub, .hero-cta-row')
+        .forEach(function(el) { el.style.display = 'none'; });
+      // nav: keep only Home; hide the toggle since one link needs no menu
+      document.querySelectorAll('.nav-links li').forEach(function(li) {
+        var a = li.querySelector('a');
+        if (!a || a.getAttribute('href') !== '/') li.style.display = 'none';
+      });
+      var nt = document.querySelector('.nav-toggle');
+      if (nt) nt.style.display = 'none';
+      // footer nav: same trim
+      document.querySelectorAll('.footer ul li').forEach(function(li) {
+        var a = li.querySelector('a');
+        if (a && /^\/(register|permit|shop|about)$/.test(a.getAttribute('href') || '')) li.style.display = 'none';
+      });
+      var pw = document.getElementById('postwrap');
+      if (pw) pw.hidden = false;
     }
 
     function tick() {
@@ -462,6 +500,57 @@
       toggle.classList.toggle('wiggle', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script>
+  (function() {
+    // Paste your Apps Script web-app URL here after deploying (see apps-script-2027.gs)
+    var SIGNUP_2027_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+    var form = document.getElementById('form-2027');
+    if (!form) return;
+    var msg = document.getElementById('nx-msg');
+    var submit = document.getElementById('nx-submit');
+
+    function say(text, ok) {
+      msg.textContent = text;
+      msg.hidden = false;
+      msg.classList.toggle('is-ok', !!ok);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name = document.getElementById('nx-name').value.trim();
+      var email = document.getElementById('nx-email').value.trim();
+      if (!name || !email || email.indexOf('@') < 1) {
+        say('Please add your name and a valid email.', false);
+        return;
+      }
+      if (SIGNUP_2027_URL.indexOf('PASTE_') === 0) {
+        say('Signup isn\'t connected yet \u2014 email us at garagesale@avondaleneighbors.org and we\'ll add you.', false);
+        return;
+      }
+      submit.disabled = true;
+      submit.textContent = 'Signing you up\u2026';
+      var body = new URLSearchParams();
+      body.append('name', name);
+      body.append('email', email);
+      body.append('interest', document.getElementById('nx-interest').value);
+      fetch(SIGNUP_2027_URL, { method: 'POST', body: body })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.ok) {
+            form.querySelectorAll('.form-field, button').forEach(function(el) { el.style.display = 'none'; });
+            say('You\'re on the list. See you in 2027!', true);
+          } else { throw new Error('bad response'); }
+        })
+        .catch(function() {
+          submit.disabled = false;
+          submit.textContent = 'Sign me up \u2192';
+          say('Something went wrong \u2014 try again, or email garagesale@avondaleneighbors.org.', false);
+        });
     });
   })();
 </script>
