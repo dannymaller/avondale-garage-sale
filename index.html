@@ -120,6 +120,7 @@
 <div class="stripe"></div>
 
 <section class="hero">
+  <div class="hero-confetti" id="hero-confetti" aria-hidden="true" hidden></div>
   <div class="hero-fan">
     <span class="dark">Saturday</span>
     <span>July 18, 2026</span>
@@ -131,45 +132,33 @@
 
   <div class="hero-stars">★ ★ ★</div>
 
-  <div class="cal">
-    <div class="cal-top">July 2026</div>
-    <div class="cal-grid" role="img" aria-label="July 2026 calendar counting down to sale day, Saturday July 18.">
-      <span class="cal-dow">S</span>
-      <span class="cal-dow">M</span>
-      <span class="cal-dow">T</span>
-      <span class="cal-dow">W</span>
-      <span class="cal-dow">T</span>
-      <span class="cal-dow">F</span>
-      <span class="cal-dow">S</span>
-      <span class="cal-pad"></span>
-      <span class="cal-pad"></span>
-      <span class="cal-pad"></span>
-      <span class="cal-d prior">1</span>
-      <span class="cal-d prior">2</span>
-      <span class="cal-d prior">3</span>
-      <span class="cal-d prior">4</span>
-      <span class="cal-d prior">5</span>
-      <span class="cal-d prior">6</span>
-      <span class="cal-d prior">7</span>
-      <span class="cal-d prior">8</span>
-      <span class="cal-d prior">9</span>
-      <span class="cal-d prior">10</span>
-      <span class="cal-d prior">11</span>
-      <span class="cal-d prior">12</span>
-      <span class="cal-d prior">13</span>
-      <span class="cal-d prior">14</span>
-      <span class="cal-d prior">15</span>
-      <span class="cal-d prior">16</span>
-      <span class="cal-d prior">17</span>
-      <span class="cal-d event">18</span>
+    <div class="countdown" role="timer" aria-label="Countdown to sale day, Saturday July 18, 2026">
+    <div class="cd-nums" id="cd-nums">
+      <div class="cd-unit"><b id="cd-days">–</b><span>Days</span></div>
+      <span class="cd-sep">/</span>
+      <div class="cd-unit"><b id="cd-hours">–</b><span>Hrs</span></div>
+      <span class="cd-sep">/</span>
+      <div class="cd-unit"><b id="cd-mins">–</b><span>Min</span></div>
     </div>
-    <button type="button" class="cal-add" id="add-to-cal">+ Add to calendar</button>
+    <div class="cd-cal-wrap">
+      <button type="button" class="cd-cal" id="add-to-cal" aria-haspopup="true" aria-expanded="false">+ Add to calendar</button>
+      <div class="cd-cal-menu" id="cal-menu" hidden>
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Avondale%20Garage%20Sale&dates=20260718T150000Z/20260718T210000Z&details=A%20walking-distance%20multi-household%20garage%20sale%20in%20southwest%20Avondale.%20One%20neighborhood%2C%20one%20map.%20Rain%20or%20shine.%20https%3A//garagesale.avondaleneighbors.org/&location=Southwest%20Avondale%2C%20Chicago%2C%20IL" target="_blank" rel="noopener">Google Calendar</a>
+        <a href="https://outlook.live.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&subject=Avondale%20Garage%20Sale&startdt=2026-07-18T15%3A00%3A00Z&enddt=2026-07-18T21%3A00%3A00Z&body=A%20walking-distance%20multi-household%20garage%20sale%20in%20southwest%20Avondale.%20One%20neighborhood%2C%20one%20map.%20Rain%20or%20shine.%20https%3A//garagesale.avondaleneighbors.org/&location=Southwest%20Avondale%2C%20Chicago%2C%20IL" target="_blank" rel="noopener">Outlook</a>
+        <a href="/avondale-garage-sale.ics">Apple Calendar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dayof" id="dayof" hidden>
+    <div class="dayof-head">Happening today<br><span class="go">10<span class="dash">&ndash;</span>4</span></div>
+    <a href="#the-area" class="btn btn-yellow dayof-btn">Open the live map →</a>
   </div>
 
   <p class="hero-sub">Neighbors opening up at once. One walking loop. Every kind of treasure you didn't know you needed.</p>
 
   <div class="hero-cta-row">
-    <a href="/register" class="btn btn-yellow">Host a sale →</a>
+    <a href="/register" class="btn btn-yellow" id="cta-host">Host a sale →</a>
     <a href="/shop" class="btn btn-dark">Plan your route</a>
   </div>
 </section>
@@ -199,7 +188,7 @@
   </div>
 </section>
 
-<section class="map-section">
+<section class="map-section" id="the-area">
   <div class="map-section-inner">
     <div class="section-num">02 · The area</div>
     <h2 class="section-title">A pocket of south-west Avondale.<br><span class="yellow-block">Small enough to walk.</span></h2>
@@ -324,6 +313,16 @@
       <h4>Get in touch</h4>
       <ul>
         <li>
+          <a href="https://www.instagram.com/avondalegaragesale/" target="_blank" rel="noopener" class="social-icon" aria-label="Follow on Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <rect x="2" y="2" width="20" height="20" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/>
+              <circle cx="17.4" cy="6.6" r="1.4" fill="currentColor"/>
+            </svg>
+            <span class="social-icon-label">Instagram</span>
+          </a>
+        </li>
+        <li>
           <a href="https://www.facebook.com/share/1H7Sde6Nrx/" target="_blank" rel="noopener" class="social-icon" aria-label="Follow on Facebook">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.017 1.792-4.683 4.533-4.683 1.312 0 2.686.235 2.686.235v2.962h-1.513c-1.491 0-1.956.93-1.956 1.886v2.262h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
@@ -351,36 +350,104 @@
 
 <script>
   (function() {
+    var DAY_START = new Date('2026-07-18T00:00:00-05:00').getTime();
+    var SALE_END  = new Date('2026-07-18T16:00:00-05:00').getTime();
+    var SALE_START = new Date('2026-07-18T10:00:00-05:00').getTime();
+
+    var countdown = document.querySelector('.countdown');
+    var nums = document.getElementById('cd-nums');
+    var d = document.getElementById('cd-days'),
+        h = document.getElementById('cd-hours'),
+        m = document.getElementById('cd-mins');
+    var splash = document.getElementById('dayof');
+    var confetti = document.getElementById('hero-confetti');
+    var hostBtn = document.getElementById('cta-host');
+    if (!countdown || !nums || !splash) return;
+
+    // Preview hooks for testing: ?preview=dayof or ?preview=post
+    var preview = (location.search.match(/[?&]preview=(\w+)/) || [])[1] || '';
+
+    var pad = function(n) { return String(n).padStart(2, '0'); };
+    var confettiOn = false;
+
+    function spawnConfetti() {
+      if (confettiOn || !confetti) return;
+      confettiOn = true;
+      var colors = ['var(--yellow)', 'var(--green)', 'var(--cream)'];
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < 36; i++) {
+        var el = document.createElement('i');
+        var c = colors[i % 3];
+        var shape = ['strip', 'square', 'dot'][Math.floor(Math.random() * 3)];
+        var w, hgt, br;
+        if (shape === 'strip') { w = 5 + Math.random() * 3; hgt = 13 + Math.random() * 5; br = '2px'; }
+        else if (shape === 'square') { w = hgt = 9 + Math.random() * 6; br = '2px'; }
+        else { w = hgt = 7 + Math.random() * 4; br = '50%'; }
+        var dur = 6 + Math.random() * 5.5;
+        el.style.cssText = 'left:' + (1 + Math.random() * 97) + '%;width:' + w.toFixed(1) +
+          'px;height:' + hgt.toFixed(1) + 'px;background:' + c + ';border-radius:' + br +
+          ';--sx:' + ((Math.random() < 0.5 ? -1 : 1) * (24 + Math.random() * 56)).toFixed(0) + 'px' +
+          ';--spin:' + ((Math.random() < 0.5 ? -1 : 1) * (360 + Math.random() * 540)).toFixed(0) + 'deg' +
+          ';animation-duration:' + dur.toFixed(2) + 's;animation-delay:-' + (Math.random() * dur).toFixed(2) + 's';
+        frag.appendChild(el);
+      }
+      confetti.appendChild(frag);
+      confetti.hidden = false;
+    }
+
+    function showDayOf() {
+      countdown.hidden = true;
+      splash.hidden = false;
+      if (hostBtn) hostBtn.style.display = 'none';
+      spawnConfetti();
+    }
+
+    function showPost() {
+      splash.hidden = true;
+      if (confetti) { confetti.hidden = true; confetti.innerHTML = ''; }
+      confettiOn = false;
+      if (hostBtn) hostBtn.style.display = 'none';
+      countdown.hidden = false;
+      nums.innerHTML = '<span class="cd-msg">See you next year</span>';
+      var cal = document.getElementById('add-to-cal');
+      if (cal) cal.style.display = 'none';
+    }
+
+    function tick() {
+      var now = Date.now();
+      if (preview === 'dayof') { showDayOf(); return; }
+      if (preview === 'post') { showPost(); return; }
+      if (now >= SALE_END) { showPost(); return; }
+      if (now >= DAY_START) { showDayOf(); setTimeout(tick, 60000); return; }
+      var diff = SALE_START - now;
+      d.textContent = Math.floor(diff / 86400000);
+      h.textContent = pad(Math.floor(diff / 3600000) % 24);
+      m.textContent = pad(Math.floor(diff / 60000) % 60);
+      setTimeout(tick, 30000);
+    }
+    tick();
+  })();
+</script>
+
+<script>
+  (function() {
     var btn = document.getElementById('add-to-cal');
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-      var ics = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Avondale Garage Sale//EN',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-        'BEGIN:VEVENT',
-        'UID:avondale-garage-sale-20260718@garagesale.avondaleneighbors.org',
-        'DTSTAMP:20260701T000000Z',
-        'DTSTART:20260718T150000Z',
-        'DTEND:20260718T210000Z',
-        'SUMMARY:Avondale Garage Sale',
-        'LOCATION:Southwest Avondale\\, Chicago\\, IL',
-        'DESCRIPTION:A walking-distance multi-household garage sale in southwest Avondale. One neighborhood\\, one map. Rain or shine.',
-        'URL:https://garagesale.avondaleneighbors.org/',
-        'END:VEVENT',
-        'END:VCALENDAR'
-      ].join('\r\n');
-      var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'avondale-garage-sale.ics';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    var menu = document.getElementById('cal-menu');
+    if (!btn || !menu) return;
+
+    function setOpen(open) {
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      setOpen(menu.hidden);
+    });
+    document.addEventListener('click', function(e) {
+      if (!menu.hidden && !menu.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') setOpen(false);
     });
   })();
 </script>

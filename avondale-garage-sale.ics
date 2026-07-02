@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Avondale Garage Sale//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:avondale-garage-sale-20260718@garagesale.avondaleneighbors.org
+DTSTAMP:20260701T000000Z
+DTSTART:20260718T150000Z
+DTEND:20260718T210000Z
+SUMMARY:Avondale Garage Sale
+LOCATION:Southwest Avondale\, Chicago\, IL
+DESCRIPTION:A walking-distance multi-household garage sale in southwest Avondale. One neighborhood\, one map. Rain or shine.
+URL:https://garagesale.avondaleneighbors.org/
+END:VEVENT
+END:VCALENDAR

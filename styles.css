@@ -344,95 +344,83 @@ a:hover { color: var(--ink); }
   margin-top: 36px;
 }
 
-/* COUNTDOWN CALENDAR (minimal) */
-.cal {
-  width: 100%;
-  max-width: 460px;
-  margin: 8px auto 32px;
-  background: var(--cream);
-  border: 1px solid rgba(26, 20, 16, 0.14);
-  border-radius: 16px;
-  padding: 20px 20px 8px;
-  color: var(--ink);
-  text-align: left;
-  box-shadow: 0 12px 28px rgba(26, 20, 16, 0.22);
+/* COUNTDOWN STRIP */
+.countdown {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 640px;
+  margin: 10px auto 34px;
 }
 
-.cal-top {
-  font-family: var(--body);
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink);
-  margin-bottom: 14px;
+.cd-nums { display: flex; align-items: baseline; gap: 16px; }
+
+.cd-unit { display: flex; align-items: baseline; gap: 7px; }
+
+.cd-unit b {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 0.9;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
 }
 
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  justify-items: stretch;
-}
+.cd-unit:first-child b { color: var(--yellow); }
 
-.cal-dow {
-  font-family: var(--body);
+.cd-unit span {
+  font-family: var(--mono);
   font-size: 11px;
   font-weight: 600;
-  color: rgba(26, 20, 16, 0.38);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  text-align: center;
-  padding-bottom: 8px;
-}
-
-.cal-d {
-  font-family: var(--body);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  width: 100%;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  color: var(--ink);
-}
-
-.cal-d.prior {
-  background: var(--yellow);
-  color: var(--ink);
-}
-
-.cal-d.event {
-  background: var(--red);
   color: var(--cream);
-  font-weight: 700;
+  opacity: 0.8;
 }
 
-.cal-add {
-  display: block;
-  width: 100%;
-  margin-top: 12px;
-  padding: 12px 8px 10px;
-  border: none;
-  border-top: 1px solid rgba(26, 20, 16, 0.12);
-  background: transparent;
-  font-family: var(--body);
+.cd-sep {
+  font-family: var(--display);
+  font-size: 28px;
+  color: rgba(244, 235, 210, 0.35);
+  align-self: center;
+}
+
+.cd-msg {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 40px);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+
+.cd-cal {
+  align-self: center;
+  font-family: var(--mono);
+  font-size: 11px;
   font-weight: 600;
-  font-size: 13px;
-  color: var(--red);
-  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--yellow);
+  padding: 9px 13px;
+  border: none;
   cursor: pointer;
-  transition: color 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
 }
 
-.cal-add:hover { color: var(--ink); }
-.cal-add:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+.cd-cal:hover { background: var(--cream); color: var(--ink); }
+.cd-cal:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
-@media (max-width: 520px) {
-  .cal { max-width: 100%; }
-  .cal-grid { gap: 4px; }
+@media (max-width: 560px) {
+  .countdown { gap: 12px; }
+  .cd-nums { gap: 12px; }
+  .cd-cal { align-self: auto; }
 }
 
 /* BUTTONS */
@@ -1489,3 +1477,105 @@ a:hover { color: var(--ink); }
   .cta-two > * { border-right: none; border-bottom: 2px solid var(--ink); }
   .cta-two > *:last-child { border-bottom: none; }
 }
+
+
+/* ============================================================
+   DAY-OF STATE (auto-activates July 18; splash replaces the countdown)
+   ============================================================ */
+.hero-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero > *:not(.hero-confetti) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero .countdown { z-index: 10; }
+
+.hero-confetti i {
+  position: absolute;
+  top: -26px;
+  display: block;
+  animation-name: confetti-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes confetti-fall {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translate3d(var(--sx, 40px), 108vh, 0) rotate(var(--spin, 600deg)); opacity: 0; }
+}
+
+.countdown[hidden],
+.dayof[hidden] { display: none !important; }
+
+.dayof { position: relative; max-width: 760px; margin: 2px auto 30px; padding: 10px 12px 8px; }
+
+.dayof-head {
+  font-family: var(--display); font-size: clamp(44px, 7vw, 84px); line-height: 0.9;
+  letter-spacing: -0.03em; text-transform: uppercase; color: var(--cream);
+  text-shadow: 6px 6px 0 var(--ink); margin-bottom: 28px;
+}
+.dayof-head .go { color: var(--yellow); letter-spacing: 0.05em; }
+.dayof-head .go .dash { padding: 0 0.06em; }
+
+@media (max-width: 600px) {
+  .dayof-head { text-shadow: 4px 4px 0 var(--ink); }
+}
+
+.dayof-btn { font-size: 16px; padding: 20px 34px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-confetti { display: none; }
+}
+
+
+/* ADD-TO-CALENDAR MENU */
+.cd-cal-wrap { position: relative; align-self: center; }
+
+.cd-cal-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 190px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+}
+
+.cd-cal-menu[hidden] { display: none; }
+
+.cd-cal-menu a,
+.cd-cal-menu button {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--cream);
+  border: none;
+  border-bottom: 2px solid var(--ink);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.cd-cal-menu a:last-child,
+.cd-cal-menu button:last-child { border-bottom: none; }
+
+.cd-cal-menu a:hover,
+.cd-cal-menu button:hover { background: var(--yellow); color: var(--ink); }
