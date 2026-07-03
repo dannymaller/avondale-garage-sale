@@ -12,6 +12,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#1a1410">
+<link rel="preconnect" href="https://api.mapbox.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.css" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PTKY9ETJE0"></script>
@@ -514,7 +517,7 @@
 <script>
   (function() {
     // Paste your 2027 Apps Script web-app URL here after deploying (see apps-script-2027.gs)
-    var SIGNUP_2027_URL = 'https://script.google.com/macros/s/AKfycbxU1YHychlrf5S784QKTEUcVpVB5RUFMYUW5E4bgXTS0PCjBjYrcrs-z8pRfvl0tam8Og/exec';
+    var SIGNUP_2027_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
 
     var form = document.getElementById('form-2027');
     if (!form) return;
@@ -563,23 +566,52 @@
   })();
 </script>
 
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.js"></script>
 <script>
   (function() {
     var mapEl = document.getElementById('boundary-map');
-    if (!mapEl || typeof mapboxgl === 'undefined') return;
+    if (!mapEl) return;
 
-    // Check WebGL2 support (Mapbox GL JS v3 requires WebGL2)
-    if (typeof mapboxgl.supported === 'function' && !mapboxgl.supported()) {
-      mapEl.innerHTML = '<div class="map-fallback">' +
-        '<strong>Map can\'t load in this browser</strong>' +
-        'Your browser doesn\'t support the map graphics needed. ' +
-        'Try the latest Chrome, Firefox, or Edge, or make sure hardware acceleration is enabled in your browser settings.' +
-        '</div>';
-      return;
+    var MAPBOX_JS = 'https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.js';
+    var SELLERS_URL = 'https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers';
+    var started = false;
+    var sellersPromise = null;
+
+    function loadScript(src) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = function() { reject(new Error('failed to load ' + src)); };
+        document.head.appendChild(s);
+      });
     }
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFubnltYWxsZXIiLCJhIjoiY21wY3RiYWtrMDJuOTJxb2RibG95dzI0aSJ9.slYxHExWPCCAaYkGxuSizw';
+    function begin() {
+      if (started) return;
+      started = true;
+      // Start the seller fetch right away so it runs while the map library downloads.
+      sellersPromise = fetch(SELLERS_URL)
+        .then(function(res) { return res.text(); })
+        .then(function(text) { try { return JSON.parse(text); } catch (e) { return null; } })
+        .catch(function() { return null; });
+      loadScript(MAPBOX_JS).then(initMap).catch(function(err) { console.warn(err); });
+    }
+
+    function initMap() {
+      if (typeof mapboxgl === 'undefined') return;
+
+      // Check WebGL2 support (Mapbox GL JS v3 requires WebGL2)
+      if (typeof mapboxgl.supported === 'function' && !mapboxgl.supported()) {
+        mapEl.innerHTML = '<div class="map-fallback">' +
+          '<strong>Map can\'t load in this browser</strong>' +
+          'Your browser doesn\'t support the map graphics needed. ' +
+          'Try the latest Chrome, Firefox, or Edge, or make sure hardware acceleration is enabled in your browser settings.' +
+          '</div>';
+        return;
+      }
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoiZGFubnltYWxsZXIiLCJhIjoiY21wY3RiYWtrMDJuOTJxb2RibG95dzI0aSJ9.slYxHExWPCCAaYkGxuSizw';
 
     var boundary = [
       [-87.7272, 41.9391], // NW: Belmont & Pulaski
@@ -703,15 +735,8 @@
         });
       }
 
-      // Fetch live sellers from the Google Sheet (via Apps Script endpoint)
-      fetch('https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers')
-        .then(function(res) { return res.text(); })
-        .then(function(text) {
-          var data;
-          try { data = JSON.parse(text); } catch (e) {
-            console.warn('Could not parse sellers JSON:', e);
-            return;
-          }
+      // Seller pins: the fetch was kicked off in parallel, so consume it here.
+      (sellersPromise || Promise.resolve(null)).then(function(data) {
           var sellers = (data && data.sellers) || [];
           sellers.forEach(function(seller) {
             if (!seller.coords || seller.coords.length !== 2) return;
@@ -735,6 +760,19 @@
       // Final resize to ensure full render
       map.resize();
     });
+    } // end initMap
+
+    // Only load Mapbox and start the map when it is near the viewport.
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) { io.disconnect(); begin(); break; }
+        }
+      }, { rootMargin: '400px' });
+      io.observe(mapEl);
+    } else {
+      window.addEventListener('load', begin);
+    }
   })();
 </script>
 
