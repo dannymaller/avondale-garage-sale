@@ -161,6 +161,34 @@
     <a href="/register" class="btn btn-yellow" id="cta-host">Host a sale →</a>
     <a href="/shop" class="btn btn-dark">Plan your route</a>
   </div>
+
+  <div class="postwrap" id="postwrap" hidden>
+    <p class="post-sub">That's a wrap on 2026. Want in on next year? Drop your info and we'll reach out when 2027 registration opens.</p>
+    <form class="post-form" id="form-2027" novalidate>
+      <div class="pf-field">
+        <label for="nx-name">Name</label>
+        <input id="nx-name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="pf-field">
+        <label for="nx-email">Email</label>
+        <input id="nx-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="pf-field">
+        <label for="nx-interest">Next year I want to</label>
+        <select id="nx-interest" name="interest">
+          <option value="host">Host a sale</option>
+          <option value="shop">Shop</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div class="pf-field">
+        <label for="nx-notes">Anything you'd want next year? (optional)</label>
+        <textarea id="nx-notes" name="notes" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-yellow" id="nx-submit">Sign me up →</button>
+      <p class="post-form-msg" id="nx-msg" hidden></p>
+    </form>
+  </div>
 </section>
 
 <div class="stripe"></div>
@@ -407,11 +435,16 @@
       if (confetti) { confetti.hidden = true; confetti.innerHTML = ''; }
       confettiOn = false;
       if (hostBtn) hostBtn.style.display = 'none';
-      countdown.hidden = false;
-      nums.innerHTML = '<span class="cd-msg">See you next year</span>';
-      var cal = document.getElementById('add-to-cal');
-      if (cal) cal.style.display = 'none';
-      // standalone post page: collapse the nav to Home only
+      // event is over: strip the page down to a single next-year screen
+      countdown.hidden = true;
+      var title = document.querySelector('.hero-title');
+      if (title) title.innerHTML = 'See you<br><span class="yellow">next year</span>';
+      ['.hero-fan', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
+        document.querySelectorAll(sel).forEach(function(el) { el.style.display = 'none'; });
+      });
+      var post = document.getElementById('postwrap');
+      if (post) post.hidden = false;
+      // collapse the nav to Home only
       document.querySelectorAll('.nav-links li').forEach(function(li) {
         var a = li.querySelector('a');
         if (!a || a.getAttribute('href') !== '/') li.style.display = 'none';
@@ -474,6 +507,58 @@
       toggle.classList.toggle('wiggle', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script>
+  (function() {
+    // Paste your 2027 Apps Script web-app URL here after deploying (see apps-script-2027.gs)
+    var SIGNUP_2027_URL = 'https://script.google.com/macros/s/AKfycbxx84FhKcBIttYPgOrpLEiNTmQBTK2fR7IjDKJoDTTyP0Vx8RoFeMZwvN5Zs3EWEamsiA/exec';
+
+    var form = document.getElementById('form-2027');
+    if (!form) return;
+    var msg = document.getElementById('nx-msg');
+    var submit = document.getElementById('nx-submit');
+
+    function say(text, ok) {
+      msg.textContent = text;
+      msg.hidden = false;
+      msg.classList.toggle('is-ok', !!ok);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name = document.getElementById('nx-name').value.trim();
+      var email = document.getElementById('nx-email').value.trim();
+      if (!name || !email || email.indexOf('@') < 1) {
+        say('Please add your name and a valid email.', false);
+        return;
+      }
+      if (SIGNUP_2027_URL.indexOf('PASTE_') === 0) {
+        say("Signup isn't connected yet. Email us at garagesale@avondaleneighbors.org and we'll add you.", false);
+        return;
+      }
+      submit.disabled = true;
+      submit.textContent = 'Signing you up...';
+      var body = new URLSearchParams();
+      body.append('name', name);
+      body.append('email', email);
+      body.append('interest', document.getElementById('nx-interest').value);
+      body.append('notes', document.getElementById('nx-notes').value.trim());
+      fetch(SIGNUP_2027_URL, { method: 'POST', body: body })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.ok) {
+            form.querySelectorAll('.pf-field, button').forEach(function(el) { el.style.display = 'none'; });
+            say("You're on the list. See you in 2027.", true);
+          } else { throw new Error('bad response'); }
+        })
+        .catch(function() {
+          submit.disabled = false;
+          submit.textContent = 'Sign me up →';
+          say('Something went wrong. Try again, or email garagesale@avondaleneighbors.org.', false);
+        });
     });
   })();
 </script>
@@ -652,5 +737,44 @@
     });
   })();
 </script>
+
+<style>
+  /* Post-event state: 2027 signup + feedback. Self-contained, uses site vars with fallbacks. */
+  .postwrap { max-width: 480px; margin: 10px auto 0; }
+  .postwrap[hidden] { display: none !important; }
+  .post-sub {
+    font-family: var(--sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+    font-weight: 500;
+    font-size: clamp(16px, 2.2vw, 20px);
+    line-height: 1.5;
+    color: var(--cream, #f3ecd5);
+    margin: 0 0 26px;
+  }
+  .post-form { display: grid; gap: 16px; text-align: left; }
+  .pf-field { display: grid; gap: 6px; }
+  .pf-field label {
+    font-family: var(--sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+    font-weight: 700; font-size: 12px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--cream, #f3ecd5);
+  }
+  .pf-field input, .pf-field select, .pf-field textarea {
+    font: inherit; font-size: 16px; padding: 12px 14px;
+    border: 2px solid #1a1410; background: #fff; color: #1a1410;
+    border-radius: 2px; width: 100%; box-sizing: border-box;
+  }
+  .pf-field textarea { resize: vertical; }
+  .pf-field input:focus, .pf-field select:focus, .pf-field textarea:focus {
+    outline: 3px solid var(--yellow, #f4b71b); outline-offset: 1px;
+  }
+  .post-form .btn, .post-form button { justify-self: center; margin-top: 6px; cursor: pointer; }
+  .post-form-msg {
+    font-family: var(--sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+    font-weight: 600; font-size: 15px; line-height: 1.45; text-align: center;
+    color: var(--cream, #f3ecd5); background: rgba(26, 20, 16, 0.35);
+    padding: 12px 14px; margin: 6px 0 0;
+  }
+  .post-form-msg[hidden] { display: none; }
+  .post-form-msg.is-ok { background: var(--green, #4a8a51); color: #fff; }
+</style>
 </body>
 </html>
