@@ -135,6 +135,11 @@
 
   <div class="hero-stars">★ ★ ★</div>
 
+  <div class="hero-count" id="hero-count" data-base="80" aria-label="Neighbors signed up so far">
+    <span class="hero-count-num" id="hero-count-num">80+</span>
+    <span class="hero-count-label">Neighbors<br>signed up so far</span>
+  </div>
+
     <div class="countdown" role="timer" aria-label="Countdown to sale day, Saturday July 18, 2026">
     <div class="cd-nums" id="cd-nums">
       <div class="cd-unit"><b id="cd-days">–</b><span>Days</span></div>
@@ -239,7 +244,7 @@
     <div>
       <div class="grid-item-num">For sellers</div>
       <h3 class="grid-item-title">Have stuff to move?</h3>
-      <p class="grid-item-body" style="margin-bottom: 24px;">Register your address to get on the digital map. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
+      <p class="grid-item-body" style="margin-bottom: 24px;">More than 80 neighbors are already on the map. Register your address to join them. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
       <a href="/register" class="btn btn-dark">Register your sale →</a>
     </div>
     <div>
@@ -442,7 +447,7 @@
       countdown.hidden = true;
       var title = document.querySelector('.hero-title');
       if (title) title.innerHTML = 'See you<br><span class="yellow">next year</span>';
-      ['.hero-fan', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
+      ['.hero-fan', '.hero-count', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
         document.querySelectorAll(sel).forEach(function(el) { el.style.display = 'none'; });
       });
       var post = document.getElementById('postwrap');
@@ -479,6 +484,33 @@
 
 <script>
   (function() {
+    // Live registrant tally. Reads the same seller feed the map uses and floors the
+    // number to the nearest 5 with a "+", so it only ever climbs and never under-reports.
+    var wrap = document.getElementById('hero-count');
+    var out = document.getElementById('hero-count-num');
+    if (!wrap || !out) return;
+    var base = parseInt(wrap.getAttribute('data-base'), 10) || 80;
+    var COUNT_URL = 'https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers';
+
+    fetch(COUNT_URL)
+      .then(function(r) { return r.text(); })
+      .then(function(t) { try { return JSON.parse(t); } catch (e) { return null; } })
+      .then(function(data) {
+        var live = data && data.sellers ? data.sellers.length : 0;
+        if (live > base) {
+          var floored = Math.floor(live / 5) * 5;
+          if (floored > base) {
+            out.textContent = floored + '+';
+            wrap.classList.add('is-bumped');
+          }
+        }
+      })
+      .catch(function() { /* keep the 80+ baseline */ });
+  })();
+</script>
+
+<script>
+  (function() {
     var btn = document.getElementById('add-to-cal');
     var menu = document.getElementById('cal-menu');
     if (!btn || !menu) return;
@@ -496,6 +528,26 @@
     });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') setOpen(false);
+    });
+  })();
+</script>
+
+<script>
+  (function() {
+    // Calendar intent tracking. Sends two GA4 events:
+    //  add_to_calendar_open   -> tapped the button and saw the menu
+    //  add_to_calendar_select -> chose a calendar (Google / Outlook / Apple)
+    // Note: a "select" means the pre-filled event opened, not a confirmed save.
+    // Google and Outlook finish saving on their own pages, which can't report back.
+    if (typeof gtag !== 'function') return;
+    var open = document.getElementById('add-to-cal');
+    if (open) open.addEventListener('click', function() {
+      gtag('event', 'add_to_calendar_open');
+    });
+    document.querySelectorAll('#cal-menu a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        gtag('event', 'add_to_calendar_select', { calendar: a.textContent.trim() });
+      });
     });
   })();
 </script>

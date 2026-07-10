@@ -303,6 +303,47 @@ a:hover { color: var(--ink); }
   line-height: 1;
 }
 
+/* HERO COUNT — live registrant tally, stamped like a ticket */
+.hero-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  margin: 4px auto 30px;
+  padding: 14px 22px 14px 16px;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+  transform: rotate(-1.4deg);
+}
+
+.hero-count-num {
+  font-family: var(--display);
+  font-size: clamp(46px, 8vw, 76px);
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-count-label {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(15px, 2.1vw, 19px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink);
+}
+
+.hero-count.is-bumped .hero-count-num { color: var(--green); }
+
+@media (max-width: 600px) {
+  .hero-count { box-shadow: 5px 5px 0 var(--ink); gap: 14px; }
+}
+
+.hero-count[hidden] { display: none !important; }
+
 .hero-sub {
   font-family: var(--sans);
   font-weight: 500;
