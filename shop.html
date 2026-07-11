@@ -97,19 +97,19 @@
     <li>
       <div>
         <h3>Don't drive into the neighborhood.</h3>
-        <p>The sale spans about 30 blocks and parking is residential. Pedestrian traffic will be heavy. If you drive, park on a major street outside the boundary (Pulaski, Belmont, Diversey) and walk in.</p>
+        <p>The sale runs a mile from Pulaski to Kedzie and parking is residential. Pedestrian traffic will be heavy. If you drive, park on a major street along the edge (Pulaski, Belmont, Diversey, or Kedzie) and walk in.</p>
       </div>
     </li>
     <li>
       <div>
         <h3>Take the Blue Line.</h3>
-        <p>The Belmont stop puts you right at the southeast corner of the sale area. From there it's a 5-minute walk to the heart of the action.</p>
+        <p>The Belmont stop sits right on the northern edge of the sale area, toward the Kedzie end. From there it's a short walk south into the heart of the action.</p>
       </div>
     </li>
     <li>
       <div>
         <h3>Bus options.</h3>
-        <p>The 77 Belmont, 76 Diversey, and 53 Pulaski all run along the boundary streets. Hop off anywhere and walk in.</p>
+        <p>The 77 Belmont, 76 Diversey, and 53 Pulaski run along the north, south, and west edges of the sale area. Hop off anywhere and walk in.</p>
       </div>
     </li>
     <li>
@@ -220,8 +220,8 @@
 
     var boundary = [
       [-87.7272, 41.9391], // NW: Belmont & Pulaski
-      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
-      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
+      [-87.7077, 41.9393], // NE: Belmont & Kedzie
+      [-87.7076, 41.9320], // SE: Diversey & Kedzie
       [-87.7271, 41.9317], // SW: Diversey & Pulaski
       [-87.7272, 41.9391]
     ];
@@ -229,8 +229,8 @@
     var map = new mapboxgl.Map({
       container: 'boundary-map',
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [-87.7195, 41.9355],
-      zoom: 13.2,
+      center: [-87.7175, 41.9355],
+      zoom: 13.1,
       attributionControl: { compact: true }
     });
 

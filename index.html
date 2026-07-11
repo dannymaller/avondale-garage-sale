@@ -56,12 +56,12 @@
       "addressRegion": "IL",
       "postalCode": "60618",
       "addressCountry": "US",
-      "streetAddress": "Between Belmont, Diversey, Pulaski, and Milwaukee Avenues"
+      "streetAddress": "Between Belmont, Diversey, Pulaski, and Kedzie Avenues"
     },
     "geo": {
       "@type": "GeoCoordinates",
       "latitude": 41.9345,
-      "longitude": -87.7280
+      "longitude": -87.7175
     }
   },
   "image": [
@@ -232,7 +232,7 @@
     <div class="map-wrap map-wrap-large">
       <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
     </div>
-    <p class="map-caption">Our year-one target: about 30 walkable blocks in southwest Avondale, picked for being walkable and avoiding major-road crossings. The shaded area grows as nearby neighbors sign up. Anyone in Avondale can register.</p>
+    <p class="map-caption">We redrew the boundary around where neighbors actually signed up. It now runs a full mile of Belmont, from Pulaski east to Kedzie, and south to Diversey. That is about double the area we started with. The shaded area grows as nearby neighbors sign up. Anyone in Avondale can register.</p>
   </div>
 </section>
 
@@ -667,8 +667,8 @@
 
     var boundary = [
       [-87.7272, 41.9391], // NW: Belmont & Pulaski
-      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
-      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
+      [-87.7077, 41.9393], // NE: Belmont & Kedzie
+      [-87.7076, 41.9320], // SE: Diversey & Kedzie
       [-87.7271, 41.9317], // SW: Diversey & Pulaski
       [-87.7272, 41.9391]  // close polygon
     ];
@@ -676,8 +676,8 @@
     var map = new mapboxgl.Map({
       container: 'boundary-map',
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [-87.7195, 41.9355],
-      zoom: 13.2,
+      center: [-87.7175, 41.9355],
+      zoom: 13.1,
       attributionControl: { compact: true }
     });
 

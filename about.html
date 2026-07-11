@@ -88,12 +88,12 @@
   <p>It's free to participate. There's no fee, no booth, no application process beyond filling out the form. We're focused on a specific area of Avondale to keep things walkable, but anyone in the neighborhood is welcome to sign up.</p>
 
   <h2>The target area</h2>
-  <p>For year one, we picked a focused pocket of southwest Avondale. The target area is small enough to walk in a morning and avoids crossing major roads like the Kennedy and Diversey traffic. Roughly 30 walkable blocks. Inside this pocket:</p>
+  <p>We started with a smaller pocket of southwest Avondale, then redrew the boundary around where neighbors actually registered. It now stretches a full mile of Belmont, from Pulaski east to Kedzie, and south to Diversey. Still small enough to walk in a morning. The edges are:</p>
   <ul>
     <li><strong>North:</strong> Belmont Avenue</li>
     <li><strong>South:</strong> Diversey Avenue</li>
     <li><strong>West:</strong> Pulaski Road</li>
-    <li><strong>Northeast:</strong> Milwaukee Avenue (with the Kennedy Expressway just beyond)</li>
+    <li><strong>East:</strong> Kedzie Avenue</li>
   </ul>
   <p>The target area can grow. If a few neighbors right outside the boundary sign up, we'll stretch the shaded area to include them. The point is keeping shoppers in one walkable cluster, not drawing a hard line. <strong>Anyone in Avondale can register.</strong></p>
 
@@ -214,8 +214,8 @@
 
     var boundary = [
       [-87.7272, 41.9391], // NW: Belmont & Pulaski
-      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
-      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
+      [-87.7077, 41.9393], // NE: Belmont & Kedzie
+      [-87.7076, 41.9320], // SE: Diversey & Kedzie
       [-87.7271, 41.9317], // SW: Diversey & Pulaski
       [-87.7272, 41.9391]
     ];
@@ -223,8 +223,8 @@
     var map = new mapboxgl.Map({
       container: 'boundary-map',
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [-87.7195, 41.9355],
-      zoom: 13.2,
+      center: [-87.7175, 41.9355],
+      zoom: 13.1,
       attributionControl: { compact: true }
     });
 
