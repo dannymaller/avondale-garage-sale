@@ -323,6 +323,10 @@ a:hover { color: var(--ink); }
   letter-spacing: -0.03em;
   color: var(--red);
   font-variant-numeric: tabular-nums;
+  /* Reserve room for the widest value so the ticket doesn't resize while counting up. */
+  display: inline-block;
+  min-width: 3.4ch;
+  text-align: center;
 }
 
 .hero-count-label {

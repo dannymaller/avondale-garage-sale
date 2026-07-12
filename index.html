@@ -484,28 +484,73 @@
 
 <script>
   (function() {
-    // Live registrant tally. Reads the same seller feed the map uses and floors the
-    // number to the nearest 5 with a "+", so it only ever climbs and never under-reports.
+    // Live registrant tally, with a count-up animation.
+    // Reads the same seller feed the map uses and floors the number to the nearest 5
+    // with a "+", so it only ever climbs and never under-reports.
     var wrap = document.getElementById('hero-count');
     var out = document.getElementById('hero-count-num');
     if (!wrap || !out) return;
+
     var base = parseInt(wrap.getAttribute('data-base'), 10) || 80;
     var COUNT_URL = 'https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers';
+    var DURATION = 1500;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    fetch(COUNT_URL)
-      .then(function(r) { return r.text(); })
-      .then(function(t) { try { return JSON.parse(t); } catch (e) { return null; } })
-      .then(function(data) {
-        var live = data && data.sellers ? data.sellers.length : 0;
-        if (live > base) {
+    var shown = 0;   // number currently painted
+    var raf = null;
+
+    function paint(n) {
+      shown = n;
+      out.textContent = n + '+';
+      wrap.setAttribute('aria-label', n + ' or more neighbors signed up so far');
+    }
+
+    // Ease-out cubic: fast off the line, settles gently on the final number.
+    function countTo(target) {
+      if (raf) cancelAnimationFrame(raf);
+      if (reduced || target <= shown) { paint(target); return; }
+      var from = shown;
+      var delta = target - from;
+      var t0 = null;
+      function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min((ts - t0) / DURATION, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        paint(Math.round(from + delta * eased));
+        if (p < 1) raf = requestAnimationFrame(step);
+      }
+      raf = requestAnimationFrame(step);
+    }
+
+    // The number is set by script, so screen readers get it from the wrapper's label.
+    out.setAttribute('aria-hidden', 'true');
+    paint(0);
+
+    // Only run once the hero is actually on screen, so the animation isn't missed.
+    function start() {
+      countTo(base);
+      fetch(COUNT_URL)
+        .then(function(r) { return r.text(); })
+        .then(function(t) { try { return JSON.parse(t); } catch (e) { return null; } })
+        .then(function(data) {
+          var live = data && data.sellers ? data.sellers.length : 0;
           var floored = Math.floor(live / 5) * 5;
           if (floored > base) {
-            out.textContent = floored + '+';
             wrap.classList.add('is-bumped');
+            countTo(floored);   // retargets mid-flight if the count is still running
           }
-        }
-      })
-      .catch(function() { /* keep the 80+ baseline */ });
+        })
+        .catch(function() { /* keep the baseline */ });
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { io.disconnect(); start(); }
+      }, { threshold: 0.4 });
+      io.observe(wrap);
+    } else {
+      start();
+    }
   })();
 </script>
 
