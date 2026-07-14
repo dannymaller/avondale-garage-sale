@@ -1923,13 +1923,43 @@ a:hover { color: var(--ink); }
   color: var(--ink);
 }
 
-.route-list li.is-dragging {
-  background: var(--yellow);
-  box-shadow: 2px 2px 0 var(--ink);
-  border-bottom-color: transparent;
+/* Rows getting out of the way glide. The row under the finger must NOT have a
+   transition, or it would lag behind the pointer. */
+.route-list li.is-shifting {
+  transition: transform 190ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  will-change: transform;
 }
+
+/* The lift: picked up off the page and following the pointer 1:1. */
+.route-list li.is-dragging {
+  position: relative;
+  z-index: 5;
+  transition: none;
+  background: var(--cream);
+  box-shadow: 0 3px 0 var(--ink), 0 10px 20px rgba(28, 26, 23, 0.22);
+  border-bottom-color: transparent;
+  cursor: grabbing;
+}
+.route-list li.is-dragging .route-grip { color: var(--ink); }
+.route-list li.is-dragging .route-n { background: var(--red); }
+
+/* Dropping: the row settles into the gap instead of snapping. */
+.route-list li.is-settling {
+  position: relative;
+  z-index: 5;
+  transition: transform 165ms cubic-bezier(0.2, 0.8, 0.25, 1),
+              box-shadow 165ms ease-out;
+  box-shadow: 0 0 0 rgba(28, 26, 23, 0);
+  background: var(--cream);
+}
+
 /* while a row is moving, don't let text get selected under the pointer */
 .route-tray.is-reordering { user-select: none; -webkit-user-select: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .route-list li.is-shifting,
+  .route-list li.is-settling { transition: none; }
+}
 
 .route-n {
   flex: 0 0 auto;

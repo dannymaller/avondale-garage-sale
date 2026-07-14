@@ -272,50 +272,76 @@
   // mid-drag would destroy the very element the pointer is captured on.
   var pendingFocus = null;   // key whose handle should regain focus after a render
 
-  function renumber() {
-    var rows = listEl.querySelectorAll('li');
-    for (var i = 0; i < rows.length; i++) {
-      var n = rows[i].querySelector('.route-n');
-      if (n) n.textContent = i + 1;
-    }
-  }
-
-  function commitOrder() {
-    var order = [];
-    listEl.querySelectorAll('li[data-key]').forEach(function (li) {
-      order.push(li.getAttribute('data-key'));
-    });
-    stops.sort(function (a, b) { return order.indexOf(a.key) - order.indexOf(b.key); });
-    save();
-    render();
-  }
-
   function bindReorder() {
     listEl.addEventListener('pointerdown', function (e) {
       var grip = e.target.closest('.route-grip');
       if (!grip) return;
       var li = grip.closest('li');
       if (!li || stops.length < 2) return;
+      e.preventDefault();
 
-      e.preventDefault();                 // stop the list from scrolling under the drag
+      // Snapshot the geometry once. Nothing re-renders during the drag; rows are
+      // moved with transforms only, so the layout underneath stays still and the
+      // measurements stay valid.
+      var rows = [].slice.call(listEl.querySelectorAll('li'));
+      var from = rows.indexOf(li);
+      var heights = rows.map(function (r) { return r.getBoundingClientRect().height; });
+      var dragH = heights[from];
+
+      // centre of each row within the list's scrollable content
+      var centers = [], acc = 0;
+      for (var i = 0; i < rows.length; i++) {
+        centers.push(acc + heights[i] / 2);
+        acc += heights[i];
+      }
+
+      var startY = e.clientY;
+      var startScroll = listEl.scrollTop;
+      var to = from;
+
       grip.setPointerCapture(e.pointerId);
       li.classList.add('is-dragging');
       tray.classList.add('is-reordering');
+      rows.forEach(function (r) { if (r !== li) r.classList.add('is-shifting'); });
+
+      // Push the other rows aside to open a gap where the dragged row will land.
+      function shiftOthers() {
+        for (var i = 0; i < rows.length; i++) {
+          if (i === from) continue;
+          var y = 0;
+          if (from < to && i > from && i <= to) y = -dragH;        // rows slide up
+          else if (to < from && i >= to && i < from) y = dragH;    // rows slide down
+          rows[i].style.transform = y ? 'translateY(' + y + 'px)' : '';
+        }
+      }
+
+      function update(delta) {
+        li.style.transform = 'translateY(' + delta + 'px)';
+        var center = centers[from] + delta;
+
+        // Which slot is the dragged row's centre currently sitting in?
+        var t = from;
+        if (delta > 0) {
+          for (var i = from + 1; i < rows.length; i++) if (center > centers[i]) t = i;
+        } else if (delta < 0) {
+          for (var j = from - 1; j >= 0; j--) if (center < centers[j]) t = j;
+        }
+        if (t !== to) { to = t; shiftOthers(); }
+      }
+
+      // Drag near the top or bottom of a scrolling list and it follows.
+      function autoScroll(clientY) {
+        if (listEl.scrollHeight <= listEl.clientHeight) return;
+        var r = listEl.getBoundingClientRect();
+        var EDGE = 26;
+        if (clientY < r.top + EDGE) listEl.scrollTop -= 6;
+        else if (clientY > r.bottom - EDGE) listEl.scrollTop += 6;
+      }
 
       function onMove(ev) {
-        var y = ev.clientY;
-        var next = li.nextElementSibling;
-        var prev = li.previousElementSibling;
-        // Past the midpoint of the neighbour below? Swap down.
-        if (next) {
-          var rn = next.getBoundingClientRect();
-          if (y > rn.top + rn.height / 2) { listEl.insertBefore(next, li); renumber(); return; }
-        }
-        // Past the midpoint of the neighbour above? Swap up.
-        if (prev) {
-          var rp = prev.getBoundingClientRect();
-          if (y < rp.bottom - rp.height / 2) { listEl.insertBefore(li, prev); renumber(); }
-        }
+        // Compensate for the list scrolling underneath us mid-drag.
+        update((ev.clientY - startY) + (listEl.scrollTop - startScroll));
+        autoScroll(ev.clientY);
       }
 
       function onUp(ev) {
@@ -323,9 +349,28 @@
         grip.removeEventListener('pointermove', onMove);
         grip.removeEventListener('pointerup', onUp);
         grip.removeEventListener('pointercancel', onUp);
+
+        // Settle the dragged row into the gap rather than snapping it there.
+        var offset = 0;
+        if (to > from) for (var i = from + 1; i <= to; i++) offset += heights[i];
+        else if (to < from) for (var j = to; j < from; j++) offset -= heights[j];
+
         li.classList.remove('is-dragging');
-        tray.classList.remove('is-reordering');
-        commitOrder();
+        li.classList.add('is-settling');
+        li.style.transform = 'translateY(' + offset + 'px)';
+
+        window.setTimeout(function () {
+          rows.forEach(function (r) {
+            r.classList.remove('is-shifting', 'is-settling');
+            r.style.transform = '';
+          });
+          tray.classList.remove('is-reordering');
+          if (to !== from) {
+            stops.splice(to, 0, stops.splice(from, 1)[0]);
+            save();
+          }
+          render();
+        }, 170);
       }
 
       grip.addEventListener('pointermove', onMove);
@@ -342,16 +387,14 @@
       if (!li || stops.length < 2) return;
       e.preventDefault();
 
-      if (e.key === 'ArrowUp' && li.previousElementSibling) {
-        listEl.insertBefore(li, li.previousElementSibling);
-      } else if (e.key === 'ArrowDown' && li.nextElementSibling) {
-        listEl.insertBefore(li.nextElementSibling, li);
-      } else {
-        return;
-      }
+      var idx = [].slice.call(listEl.querySelectorAll('li')).indexOf(li);
+      var next = e.key === 'ArrowUp' ? idx - 1 : idx + 1;
+      if (next < 0 || next >= stops.length) return;
+
+      stops.splice(next, 0, stops.splice(idx, 1)[0]);
       pendingFocus = li.getAttribute('data-key');
-      renumber();
-      commitOrder();
+      save();
+      render();
     });
   }
 
