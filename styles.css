@@ -1697,10 +1697,14 @@ a:hover { color: var(--ink); }
   letter-spacing: .05em;
   color: var(--ink);
 }
+/* Clear now lives at the bottom, out of the way of the minimize button. */
 .route-clear {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
   background: none;
   border: 0;
-  padding: 2px 0;
+  padding: 4px 0;
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
@@ -1709,6 +1713,109 @@ a:hover { color: var(--ink); }
   text-underline-offset: 2px;
   cursor: pointer;
 }
+.route-clear[hidden] { display: none; }
+
+/* Minimize, top-right of the tray. */
+.route-min {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+.route-min:hover { background: var(--yellow); }
+
+/* Empty state + manual entry */
+.route-empty {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(28, 26, 23, 0.66);
+}
+.route-empty[hidden] { display: none; }
+.route-list[hidden] { display: none; }
+
+.route-add {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.route-add input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 8px 9px;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--ink);
+}
+.route-add input::placeholder { color: rgba(28, 26, 23, 0.45); }
+.route-add input:disabled { opacity: .5; }
+.route-add button {
+  flex: 0 0 auto;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 8px 11px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+.route-add button:hover { background: var(--red); }
+
+/* The launcher circle, lower right. Shown whenever the tray is collapsed. */
+.route-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 900;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+.route-fab:hover { background: var(--yellow); }
+.route-fab[hidden] { display: none; }
+.route-fab.has-stops { background: var(--yellow); }
+
+.route-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 11px;
+  background: var(--red);
+  color: var(--cream);
+  border: 2px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+.route-badge[hidden] { display: none; }
+
+.route-go:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
 
 .route-list {
   list-style: none;
@@ -1790,4 +1897,5 @@ a:hover { color: var(--ink); }
     box-shadow: 5px 5px 0 var(--ink);
   }
   .route-list { max-height: 132px; }
+  .route-fab { right: 14px; bottom: 14px; }
 }

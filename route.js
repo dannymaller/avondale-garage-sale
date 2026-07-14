@@ -11,6 +11,7 @@
 (function () {
   var MAX_STOPS = 10;
   var STORE_KEY = 'ags_route_v1';
+  var OPEN_KEY  = 'ags_route_open_v1';
 
   var stops = [];
   var markers = {};   // key -> marker element, so we can show what's already added
@@ -23,11 +24,17 @@
    * if they read as a dropped pin. */
   function destOf(addr, lng, lat) {
     var a = String(addr || '').trim();
+    var hasCoords = isFinite(lng) && isFinite(lat) && lng !== null && lat !== null;
+    // A real street address: hand Google the text so it labels the stop properly.
     if (/^\d+\s+\S/.test(a)) {
       if (!/chicago/i.test(a)) a += ', Chicago, IL';
       return a;
     }
-    return lat + ',' + lng;
+    // Anything odd from the feed: coordinates are exact even if they read as a pin.
+    if (hasCoords) return lat + ',' + lng;
+    // Typed by hand with no coordinates (e.g. "Belmont & Kedzie"): send the text.
+    if (a) return /chicago/i.test(a) ? a : a + ', Chicago, IL';
+    return '';
   }
 
   function esc(s) {
@@ -73,9 +80,50 @@
   }
 
   /* ---------- tray ---------- */
-  var tray, listEl, countEl, goEl, noteEl;
+  var tray, fab, listEl, countEl, noteEl, emptyEl, inputEl, badgeEl;
+  var open = false;
+
+  function loadOpen() {
+    try { return localStorage.getItem(OPEN_KEY) === '1'; } catch (e) { return false; }
+  }
+  function saveOpen() {
+    try { localStorage.setItem(OPEN_KEY, open ? '1' : '0'); } catch (e) {}
+  }
+
+  function setOpen(v) {
+    open = !!v;
+    saveOpen();
+    tray.hidden = !open;
+    fab.hidden = open;
+    fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open && inputEl) { /* don't steal focus on load, only on a real click */ }
+  }
 
   function buildTray() {
+    // The launcher. Always there, even with an empty route, so someone who never
+    // taps a pin can still open the tray and type an address in by hand.
+    fab = document.createElement('button');
+    fab.type = 'button';
+    fab.className = 'route-fab';
+    fab.id = 'route-fab';
+    fab.setAttribute('aria-label', 'Open your route');
+    fab.setAttribute('aria-expanded', 'false');
+    fab.innerHTML =
+      '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">' +
+        '<path d="M6 3.5a2.5 2.5 0 0 1 2.5 2.5c0 1.9-2.5 4.5-2.5 4.5S3.5 7.9 3.5 6A2.5 2.5 0 0 1 6 3.5Z" ' +
+          'fill="none" stroke="currentColor" stroke-width="1.8"/>' +
+        '<path d="M18 13.5a2.5 2.5 0 0 1 2.5 2.5c0 1.9-2.5 4.5-2.5 4.5s-2.5-2.6-2.5-4.5a2.5 2.5 0 0 1 2.5-2.5Z" ' +
+          'fill="none" stroke="currentColor" stroke-width="1.8"/>' +
+        '<path d="M8.5 8.5c3.2 0 3.2 7 7 7" fill="none" stroke="currentColor" ' +
+          'stroke-width="1.8" stroke-dasharray="2.5 2.5" stroke-linecap="round"/>' +
+      '</svg>' +
+      '<span class="route-badge" id="route-badge" hidden>0</span>';
+    document.body.appendChild(fab);
+    fab.addEventListener('click', function () {
+      setOpen(true);
+      if (inputEl && !stops.length) inputEl.focus();
+    });
+
     tray = document.createElement('div');
     tray.className = 'route-tray';
     tray.id = 'route-tray';
@@ -83,23 +131,52 @@
     tray.setAttribute('aria-live', 'polite');
     tray.innerHTML =
       '<div class="route-head">' +
-        '<b>Your route <span id="route-count">0</span></b>' +
-        '<button type="button" class="route-clear" id="route-clear">Clear</button>' +
+        '<b>Your route <span id="route-count">(0)</span></b>' +
+        '<button type="button" class="route-min" id="route-min" aria-label="Minimize route">' +
+          '<svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true">' +
+            '<path d="M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+          '</svg>' +
+        '</button>' +
       '</div>' +
+      '<p class="route-empty" id="route-empty">No stops yet. Tap a pin on the map to add one, ' +
+        'or type an address below.</p>' +
       '<ol class="route-list" id="route-list"></ol>' +
+      '<div class="route-add">' +
+        '<input type="text" id="route-input" placeholder="Add an address" ' +
+          'autocomplete="off" aria-label="Add an address to your route">' +
+        '<button type="button" id="route-add-btn">Add</button>' +
+      '</div>' +
       '<p class="route-note" id="route-note"></p>' +
-      '<button type="button" class="route-go" id="route-go">Open route in Google Maps →</button>';
+      '<button type="button" class="route-go" id="route-go">Open route in Google Maps →</button>' +
+      '<button type="button" class="route-clear" id="route-clear">Clear route</button>';
     document.body.appendChild(tray);
 
     listEl = tray.querySelector('#route-list');
     countEl = tray.querySelector('#route-count');
-    goEl = tray.querySelector('#route-go');
     noteEl = tray.querySelector('#route-note');
+    emptyEl = tray.querySelector('#route-empty');
+    inputEl = tray.querySelector('#route-input');
+    badgeEl = fab.querySelector('#route-badge');
 
+    tray.querySelector('#route-min').addEventListener('click', function () { setOpen(false); });
     tray.querySelector('#route-clear').addEventListener('click', function () {
       stops = []; save(); render();
     });
-    goEl.addEventListener('click', openInGoogleMaps);
+    tray.querySelector('#route-go').addEventListener('click', openInGoogleMaps);
+
+    // manual entry
+    function addTyped() {
+      var v = (inputEl.value || '').trim();
+      if (!v) return;
+      if (stops.length >= MAX_STOPS) return;
+      addManual(v);
+      inputEl.value = '';
+      inputEl.focus();
+    }
+    tray.querySelector('#route-add-btn').addEventListener('click', addTyped);
+    inputEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); addTyped(); }
+    });
 
     listEl.addEventListener('click', function (e) {
       var b = e.target.closest('.route-remove');
@@ -110,31 +187,40 @@
 
   function render() {
     if (!tray) return;
-    countEl.textContent = '(' + stops.length + ')';
-    tray.hidden = stops.length === 0;
+    var n = stops.length;
+    countEl.textContent = '(' + n + ')';
+
+    emptyEl.hidden = n > 0;
+    listEl.hidden = n === 0;
 
     listEl.innerHTML = stops.map(function (s, i) {
       return '<li><span class="route-n">' + (i + 1) + '</span>' +
              '<span class="route-addr">' + esc(s.addr) + '</span>' +
-             '<button type="button" class="route-remove" data-key="' + s.key +
+             '<button type="button" class="route-remove" data-key="' + esc(s.key) +
              '" aria-label="Remove ' + esc(s.addr) + ' from route">×</button></li>';
     }).join('');
 
-    var full = stops.length >= MAX_STOPS;
+    var full = n >= MAX_STOPS;
     noteEl.textContent = full
       ? 'That is the most Google Maps will take in one route. Remove a stop to add another.'
       : 'Walking directions, starting from wherever you are.';
     noteEl.classList.toggle('is-full', full);
+
+    tray.querySelector('#route-go').disabled = n === 0;
+    tray.querySelector('#route-clear').hidden = n === 0;
+    inputEl.disabled = full;
+
+    // badge on the launcher
+    badgeEl.textContent = n;
+    badgeEl.hidden = n === 0;
+    fab.classList.toggle('has-stops', n > 0);
 
     // Show which pins are already in the route.
     Object.keys(markers).forEach(function (k) {
       markers[k].classList.toggle('is-in-route', stops.some(function (s) { return s.key === k; }));
     });
 
-    // Any open popup should reflect the change too.
-    document.querySelectorAll('.popup-add').forEach(function (btn) {
-      syncButton(btn);
-    });
+    document.querySelectorAll('.popup-add').forEach(syncButton);
   }
 
   function syncButton(btn) {
@@ -150,8 +236,17 @@
     if (stops.some(function (s) { return s.key === key; })) return;
     if (stops.length >= MAX_STOPS) return;
     stops.push({ key: key, addr: addr, lng: +lng, lat: +lat });
+    save(); setOpen(true); render();
+  }
+  // A hand-typed stop has no pin and no coordinates, just text for Google to geocode.
+  function addManual(text) {
+    var k = 'typed:' + text.toLowerCase();
+    if (stops.some(function (s) { return s.key === k; })) return;
+    if (stops.length >= MAX_STOPS) return;
+    stops.push({ key: k, addr: text, lng: null, lat: null });
     save(); render();
   }
+
   function remove(key) {
     stops = stops.filter(function (s) { return s.key !== key; });
     save(); render();
@@ -197,7 +292,12 @@
     refresh: render
   };
 
-  function boot() { load(); buildTray(); render(); }
+  function boot() {
+    load();
+    buildTray();
+    setOpen(loadOpen() && stops.length > 0);   // start collapsed to the circle by default
+    render();
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
