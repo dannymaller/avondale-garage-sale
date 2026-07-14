@@ -1672,16 +1672,30 @@ a:hover { color: var(--ink); }
 .route-tray {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  /* --kb is set from JS when a soft keyboard is open, so the tray rides above it
+     instead of being stranded underneath. It is 0px the rest of the time. */
+  bottom: calc(20px + var(--kb, 0px));
   z-index: 900;
   width: 300px;
   max-width: calc(100vw - 32px);
+  /* Never taller than the screen. The stop list is the only part that scrolls. */
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+  max-height: min(70dvh, 560px);
   background: var(--cream);
   border: 3px solid var(--ink);
   box-shadow: 8px 8px 0 var(--ink);
   padding: 14px;
   font-family: var(--sans);
 }
+/* Everything except the list keeps its natural height; the list absorbs the squeeze. */
+.route-head,
+.route-empty,
+.route-add,
+.route-note,
+.route-go,
+.route-clear { flex: 0 0 auto; }
 .route-tray[hidden] { display: none; }
 
 .route-head {
@@ -1746,8 +1760,13 @@ a:hover { color: var(--ink); }
   gap: 6px;
   margin-bottom: 10px;
 }
-.route-add input {
+.route-field {
+  position: relative;
   flex: 1 1 auto;
+  min-width: 0;
+}
+.route-add input {
+  width: 100%;
   min-width: 0;
   font-family: var(--sans);
   font-size: 13px;
@@ -1772,6 +1791,50 @@ a:hover { color: var(--ink); }
   cursor: pointer;
 }
 .route-add button:hover { background: var(--red); }
+
+/* suggestions, drawn from the sellers already loaded on the map */
+.route-sugg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 4px);
+  z-index: 5;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 168px;
+  overflow-y: auto;
+  background: #fff;
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.route-sugg[hidden] { display: none; }
+.route-sugg li {
+  padding: 7px 9px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(28, 26, 23, 0.1);
+}
+.route-sugg li:last-child { border-bottom: 0; }
+.route-sugg li:hover,
+.route-sugg li.is-active { background: var(--yellow); }
+.route-sugg b {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.route-sugg i {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: rgba(28, 26, 23, 0.6);
+  margin-top: 1px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* The launcher circle, lower right. Shown whenever the tray is collapsed. */
 .route-fab {
@@ -1821,8 +1884,11 @@ a:hover { color: var(--ink); }
   list-style: none;
   margin: 0 0 9px;
   padding: 0;
-  max-height: 190px;
+  flex: 1 1 auto;
+  min-height: 0;            /* required, or a flex child refuses to shrink */
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;   /* don't scroll the page behind the tray */
 }
 .route-list li {
   display: flex;
@@ -1892,10 +1958,16 @@ a:hover { color: var(--ink); }
   .route-tray {
     left: 12px;
     right: 12px;
-    bottom: 12px;
     width: auto;
+    /* clear the home-bar / notch, and ride above the keyboard when it opens */
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--kb, 0px));
+    max-height: min(62dvh, 440px);
+    padding: 12px;
     box-shadow: 5px 5px 0 var(--ink);
   }
-  .route-list { max-height: 132px; }
-  .route-fab { right: 14px; bottom: 14px; }
+  .route-fab {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .route-sugg { max-height: 140px; }
 }

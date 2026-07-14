@@ -15,6 +15,7 @@
 
   var stops = [];
   var markers = {};   // key -> marker element, so we can show what's already added
+  var known = [];     // every registered seller, used to autocomplete the address box
 
   function keyOf(lng, lat) { return (+lng).toFixed(6) + ',' + (+lat).toFixed(6); }
 
@@ -80,7 +81,7 @@
   }
 
   /* ---------- tray ---------- */
-  var tray, fab, listEl, countEl, noteEl, emptyEl, inputEl, badgeEl;
+  var tray, fab, listEl, countEl, noteEl, emptyEl, inputEl, suggEl, badgeEl;
   var open = false;
 
   function loadOpen() {
@@ -142,8 +143,13 @@
         'or type an address below.</p>' +
       '<ol class="route-list" id="route-list"></ol>' +
       '<div class="route-add">' +
-        '<input type="text" id="route-input" placeholder="Add an address" ' +
-          'autocomplete="off" aria-label="Add an address to your route">' +
+        '<div class="route-field">' +
+          '<input type="text" id="route-input" placeholder="Add an address" ' +
+            'autocomplete="off" role="combobox" aria-autocomplete="list" ' +
+            'aria-expanded="false" aria-controls="route-sugg" ' +
+            'aria-label="Add an address to your route">' +
+          '<ul class="route-sugg" id="route-sugg" role="listbox" hidden></ul>' +
+        '</div>' +
         '<button type="button" id="route-add-btn">Add</button>' +
       '</div>' +
       '<p class="route-note" id="route-note"></p>' +
@@ -156,6 +162,7 @@
     noteEl = tray.querySelector('#route-note');
     emptyEl = tray.querySelector('#route-empty');
     inputEl = tray.querySelector('#route-input');
+    suggEl = tray.querySelector('#route-sugg');
     badgeEl = fab.querySelector('#route-badge');
 
     tray.querySelector('#route-min').addEventListener('click', function () { setOpen(false); });
@@ -164,19 +171,90 @@
     });
     tray.querySelector('#route-go').addEventListener('click', openInGoogleMaps);
 
-    // manual entry
-    function addTyped() {
-      var v = (inputEl.value || '').trim();
-      if (!v) return;
-      if (stops.length >= MAX_STOPS) return;
-      addManual(v);
+    // ---- manual entry, with autocomplete over the registered sellers ----
+    // Suggestions come from the seller feed already in memory, so this is instant
+    // and costs nothing. Picking one attaches its real coordinates, which also lets
+    // the matching pin light up as "in your route".
+    var sugg = [];      // currently displayed suggestions
+    var active = -1;    // keyboard highlight
+
+    function closeSugg() {
+      suggEl.hidden = true;
+      suggEl.innerHTML = '';
+      sugg = [];
+      active = -1;
+      inputEl.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderSugg() {
+      var q = (inputEl.value || '').trim().toLowerCase();
+      if (q.length < 2) return closeSugg();
+
+      var added = {};
+      stops.forEach(function (s) { added[s.key] = true; });
+
+      sugg = known
+        .filter(function (k) { return !added[k.key] && k.addr.toLowerCase().indexOf(q) !== -1; })
+        .slice(0, 6);
+
+      if (!sugg.length) return closeSugg();
+
+      suggEl.innerHTML = sugg.map(function (k, i) {
+        return '<li role="option" id="sg-' + i + '" data-i="' + i + '"' +
+               (i === active ? ' class="is-active" aria-selected="true"' : ' aria-selected="false"') +
+               '><b>' + esc(k.addr) + '</b>' +
+               (k.cats ? '<i>' + esc(k.cats) + '</i>' : '') + '</li>';
+      }).join('');
+      suggEl.hidden = false;
+      inputEl.setAttribute('aria-expanded', 'true');
+    }
+
+    function choose(i) {
+      var k = sugg[i];
+      if (!k) return;
+      add(k.key, k.addr, k.lng, k.lat);
       inputEl.value = '';
+      closeSugg();
       inputEl.focus();
     }
-    tray.querySelector('#route-add-btn').addEventListener('click', addTyped);
+
+    function addTyped() {
+      // A highlighted suggestion wins; otherwise take whatever was typed.
+      if (active >= 0 && sugg[active]) return choose(active);
+      var v = (inputEl.value || '').trim();
+      if (!v || stops.length >= MAX_STOPS) return;
+      // Exact match against a registered seller? Use it, so we get real coordinates.
+      var hit = known.filter(function (k) {
+        return k.addr.toLowerCase() === v.toLowerCase();
+      })[0];
+      if (hit) add(hit.key, hit.addr, hit.lng, hit.lat);
+      else addManual(v);
+      inputEl.value = '';
+      closeSugg();
+      inputEl.focus();
+    }
+
+    inputEl.addEventListener('input', function () { active = -1; renderSugg(); });
     inputEl.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); addTyped(); }
+      if (e.key === 'ArrowDown' && sugg.length) {
+        e.preventDefault(); active = (active + 1) % sugg.length; renderSugg();
+      } else if (e.key === 'ArrowUp' && sugg.length) {
+        e.preventDefault(); active = (active - 1 + sugg.length) % sugg.length; renderSugg();
+      } else if (e.key === 'Enter') {
+        e.preventDefault(); addTyped();
+      } else if (e.key === 'Escape') {
+        closeSugg();
+      }
     });
+    suggEl.addEventListener('mousedown', function (e) {
+      var li = e.target.closest('li[data-i]');
+      if (!li) return;
+      e.preventDefault();                       // keep focus in the input
+      choose(+li.getAttribute('data-i'));
+    });
+    inputEl.addEventListener('blur', function () { setTimeout(closeSugg, 120); });
+
+    tray.querySelector('#route-add-btn').addEventListener('click', addTyped);
 
     listEl.addEventListener('click', function (e) {
       var b = e.target.closest('.route-remove');
@@ -287,16 +365,43 @@
     popupHtml: popupHtml,
     // Pages hand their pins over so the tray can highlight the ones already added.
     registerMarker: function (seller, el) {
-      markers[keyOf(seller.coords[0], seller.coords[1])] = el;
+      var k = keyOf(seller.coords[0], seller.coords[1]);
+      markers[k] = el;
+      if (seller.address && !known.some(function (x) { return x.key === k; })) {
+        known.push({
+          key: k,
+          addr: seller.address,
+          lng: seller.coords[0],
+          lat: seller.coords[1],
+          cats: seller.categories || ''
+        });
+      }
     },
     refresh: render
   };
+
+  /* On iOS the soft keyboard shrinks the visual viewport but not the layout
+   * viewport, so a `position: fixed; bottom` element ends up stranded behind the
+   * keyboard, off screen. visualViewport tells us how much is actually covered;
+   * we feed that to CSS as --kb so the tray lifts above it. */
+  function trackKeyboard() {
+    var vv = window.visualViewport;
+    if (!vv) return;
+    function sync() {
+      var covered = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      document.documentElement.style.setProperty('--kb', Math.round(covered) + 'px');
+    }
+    vv.addEventListener('resize', sync);
+    vv.addEventListener('scroll', sync);
+    sync();
+  }
 
   function boot() {
     load();
     buildTray();
     setOpen(loadOpen() && stops.length > 0);   // start collapsed to the circle by default
     render();
+    trackKeyboard();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
