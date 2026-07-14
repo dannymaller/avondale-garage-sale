@@ -1893,11 +1893,44 @@ a:hover { color: var(--ink); }
 .route-list li {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 5px 0;
   border-bottom: 1px solid rgba(28, 26, 23, 0.12);
+  background: var(--cream);
 }
 .route-list li:last-child { border-bottom: 0; }
+/* drag handle */
+.route-grip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 24px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: rgba(28, 26, 23, 0.42);
+  cursor: grab;
+  touch-action: none;          /* the drag owns the gesture, not the scroller */
+}
+.route-grip:hover { color: var(--ink); }
+.route-grip:active { cursor: grabbing; }
+.route-grip svg { fill: currentColor; display: block; }
+.route-grip:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+  color: var(--ink);
+}
+
+.route-list li.is-dragging {
+  background: var(--yellow);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-bottom-color: transparent;
+}
+/* while a row is moving, don't let text get selected under the pointer */
+.route-tray.is-reordering { user-select: none; -webkit-user-select: none; }
+
 .route-n {
   flex: 0 0 auto;
   width: 19px; height: 19px;

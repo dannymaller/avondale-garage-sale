@@ -15,6 +15,7 @@
 
   var stops = [];
   var markers = {};   // key -> marker element, so we can show what's already added
+  var popups  = {};   // key -> mapbox Popup, so tapping "add" can close it cleanly
   var known = [];     // every registered seller, used to autocomplete the address box
 
   function keyOf(lng, lat) { return (+lng).toFixed(6) + ',' + (+lat).toFixed(6); }
@@ -261,6 +262,97 @@
       if (!b) return;
       remove(b.getAttribute('data-key'));
     });
+
+    bindReorder();
+  }
+
+  /* ---------- drag to reorder ---------- */
+  // Pointer events cover mouse, touch and pen in one path. The rows are moved in
+  // the DOM as you drag and the order is only committed on release: re-rendering
+  // mid-drag would destroy the very element the pointer is captured on.
+  var pendingFocus = null;   // key whose handle should regain focus after a render
+
+  function renumber() {
+    var rows = listEl.querySelectorAll('li');
+    for (var i = 0; i < rows.length; i++) {
+      var n = rows[i].querySelector('.route-n');
+      if (n) n.textContent = i + 1;
+    }
+  }
+
+  function commitOrder() {
+    var order = [];
+    listEl.querySelectorAll('li[data-key]').forEach(function (li) {
+      order.push(li.getAttribute('data-key'));
+    });
+    stops.sort(function (a, b) { return order.indexOf(a.key) - order.indexOf(b.key); });
+    save();
+    render();
+  }
+
+  function bindReorder() {
+    listEl.addEventListener('pointerdown', function (e) {
+      var grip = e.target.closest('.route-grip');
+      if (!grip) return;
+      var li = grip.closest('li');
+      if (!li || stops.length < 2) return;
+
+      e.preventDefault();                 // stop the list from scrolling under the drag
+      grip.setPointerCapture(e.pointerId);
+      li.classList.add('is-dragging');
+      tray.classList.add('is-reordering');
+
+      function onMove(ev) {
+        var y = ev.clientY;
+        var next = li.nextElementSibling;
+        var prev = li.previousElementSibling;
+        // Past the midpoint of the neighbour below? Swap down.
+        if (next) {
+          var rn = next.getBoundingClientRect();
+          if (y > rn.top + rn.height / 2) { listEl.insertBefore(next, li); renumber(); return; }
+        }
+        // Past the midpoint of the neighbour above? Swap up.
+        if (prev) {
+          var rp = prev.getBoundingClientRect();
+          if (y < rp.bottom - rp.height / 2) { listEl.insertBefore(li, prev); renumber(); }
+        }
+      }
+
+      function onUp(ev) {
+        grip.releasePointerCapture(ev.pointerId);
+        grip.removeEventListener('pointermove', onMove);
+        grip.removeEventListener('pointerup', onUp);
+        grip.removeEventListener('pointercancel', onUp);
+        li.classList.remove('is-dragging');
+        tray.classList.remove('is-reordering');
+        commitOrder();
+      }
+
+      grip.addEventListener('pointermove', onMove);
+      grip.addEventListener('pointerup', onUp);
+      grip.addEventListener('pointercancel', onUp);
+    });
+
+    // Same reorder, from the keyboard: focus a handle and press up/down.
+    listEl.addEventListener('keydown', function (e) {
+      var grip = e.target.closest('.route-grip');
+      if (!grip) return;
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      var li = grip.closest('li');
+      if (!li || stops.length < 2) return;
+      e.preventDefault();
+
+      if (e.key === 'ArrowUp' && li.previousElementSibling) {
+        listEl.insertBefore(li, li.previousElementSibling);
+      } else if (e.key === 'ArrowDown' && li.nextElementSibling) {
+        listEl.insertBefore(li.nextElementSibling, li);
+      } else {
+        return;
+      }
+      pendingFocus = li.getAttribute('data-key');
+      renumber();
+      commitOrder();
+    });
   }
 
   function render() {
@@ -272,7 +364,16 @@
     listEl.hidden = n === 0;
 
     listEl.innerHTML = stops.map(function (s, i) {
-      return '<li><span class="route-n">' + (i + 1) + '</span>' +
+      return '<li data-key="' + esc(s.key) + '">' +
+             '<button type="button" class="route-grip" aria-label="Reorder ' + esc(s.addr) +
+               '. Use the arrow keys to move it." title="Drag to reorder">' +
+               '<svg viewBox="0 0 10 14" width="10" height="14" aria-hidden="true">' +
+                 '<circle cx="2.5" cy="3" r="1.15"/><circle cx="7.5" cy="3" r="1.15"/>' +
+                 '<circle cx="2.5" cy="7" r="1.15"/><circle cx="7.5" cy="7" r="1.15"/>' +
+                 '<circle cx="2.5" cy="11" r="1.15"/><circle cx="7.5" cy="11" r="1.15"/>' +
+               '</svg>' +
+             '</button>' +
+             '<span class="route-n">' + (i + 1) + '</span>' +
              '<span class="route-addr">' + esc(s.addr) + '</span>' +
              '<button type="button" class="route-remove" data-key="' + esc(s.key) +
              '" aria-label="Remove ' + esc(s.addr) + ' from route">×</button></li>';
@@ -299,6 +400,13 @@
     });
 
     document.querySelectorAll('.popup-add').forEach(syncButton);
+
+    if (pendingFocus) {
+      var li = listEl.querySelector('li[data-key="' + CSS.escape(pendingFocus) + '"]');
+      var g = li && li.querySelector('.route-grip');
+      if (g) g.focus();
+      pendingFocus = null;
+    }
   }
 
   function syncButton(btn) {
@@ -358,15 +466,23 @@
     } else {
       add(k, btn.getAttribute('data-addr'), btn.getAttribute('data-lng'), btn.getAttribute('data-lat'));
     }
-    syncButton(btn);
+    // Dismiss the popup so the map is clean again. Close it through Mapbox rather
+    // than yanking the node out of the DOM, or Mapbox still thinks it is open and
+    // the next tap on that pin does nothing.
+    if (popups[k]) popups[k].remove();
+    else {
+      var node = btn.closest('.mapboxgl-popup');
+      if (node) node.remove();
+    }
   });
 
   window.SaleRoute = {
     popupHtml: popupHtml,
     // Pages hand their pins over so the tray can highlight the ones already added.
-    registerMarker: function (seller, el) {
+    registerMarker: function (seller, el, popup) {
       var k = keyOf(seller.coords[0], seller.coords[1]);
       markers[k] = el;
+      if (popup) popups[k] = popup;
       // Pins arrive after the map loads, which is long after the saved route was
       // restored. So mark this one on the spot instead of waiting for the next
       // render, otherwise a reloaded route shows red pins for stops it already has.

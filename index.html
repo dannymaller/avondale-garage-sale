@@ -859,11 +859,12 @@
             // the same on every page. The fallback builds it locally in case an older
             // feed that has no popup field is still deployed.
             var html = window.SaleRoute.popupHtml(seller);
+            var popup = new mapboxgl.Popup({ offset: 14, closeButton: false }).setHTML(html);
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
-              .setPopup(new mapboxgl.Popup({ offset: 14, closeButton: false }).setHTML(html))
+              .setPopup(popup)
               .addTo(map);
-            window.SaleRoute.registerMarker(seller, el);
+            window.SaleRoute.registerMarker(seller, el, popup);
             allMarkers.push({ el: el, text: cats.toLowerCase() });
           });
           buildFilterBar();
