@@ -15,6 +15,11 @@
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preconnect" href="https://api.mapbox.com" crossorigin>
+<link rel="preconnect" href="https://events.mapbox.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="dns-prefetch" href="https://api.mapbox.com">
+<link rel="preload" as="script" href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.js">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.css" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PTKY9ETJE0"></script>
@@ -883,17 +888,12 @@
     });
     } // end initMap
 
-    // Only load Mapbox and start the map when it is near the viewport.
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function(entries) {
-        for (var i = 0; i < entries.length; i++) {
-          if (entries[i].isIntersecting) { io.disconnect(); begin(); break; }
-        }
-      }, { rootMargin: '400px' });
-      io.observe(mapEl);
-    } else {
-      window.addEventListener('load', begin);
-    }
+    // Start immediately on page load rather than waiting for the map to be
+    // scrolled near. The Mapbox library and the seller feed are the two slowest
+    // things on the page, so they should be in flight from the first moment.
+    // begin() is idempotent, and both requests are async, so nothing here blocks
+    // rendering the rest of the page.
+    begin();
   })();
 </script>
 
