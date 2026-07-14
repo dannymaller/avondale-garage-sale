@@ -1110,6 +1110,15 @@ a:hover { color: var(--ink); }
   color: var(--yellow);
 }
 
+/* The map frame clips at its edges (overflow:hidden), so the popup must stay
+   narrow enough to live inside it, especially on a phone. */
+.map-canvas .mapboxgl-popup { max-width: 260px !important; }
+.map-canvas .mapboxgl-popup-content { max-width: 260px; }
+@media (max-width: 600px) {
+  .map-canvas .mapboxgl-popup { max-width: 210px !important; }
+  .map-canvas .mapboxgl-popup-content { max-width: 210px; padding: 12px 13px; }
+}
+
 /* Categories line inside the dark seller popup */
 .map-canvas .mapboxgl-popup-content .popup-cats {
   display: block;
@@ -1633,8 +1642,20 @@ a:hover { color: var(--ink); }
    ============================================================ */
 
 /* popup actions */
+/* Hours line inside the dark seller popup. */
+.map-canvas .mapboxgl-popup-content .popup-hours {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--yellow);
+}
+
 .popup-actions {
   display: flex;
+  flex-wrap: wrap;          /* wrap rather than force the popup wider than the map */
   gap: 8px;
   align-items: center;
   margin-top: 10px;
@@ -1652,7 +1673,6 @@ a:hover { color: var(--ink); }
   border: 2px solid var(--ink);
   box-shadow: 2px 2px 0 var(--ink);
   cursor: pointer;
-  white-space: nowrap;
 }
 .popup-add:hover { background: var(--cream); }
 .popup-add.is-added { background: var(--green); color: var(--cream); }
@@ -1664,7 +1684,6 @@ a:hover { color: var(--ink); }
   color: var(--cream);
   text-decoration: underline;
   text-underline-offset: 2px;
-  white-space: nowrap;
 }
 .popup-dir:hover { color: var(--yellow); }
 

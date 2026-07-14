@@ -210,6 +210,7 @@
   })();
 </script>
 
+<script src="/route.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.js"></script>
 <script>
   (function() {
@@ -362,13 +363,16 @@
             var el = document.createElement('div');
             el.className = 'map-park-marker';
             var cats = seller.categories || '';
-            var html = window.SaleRoute.popupHtml(seller);
-            var popup = new mapboxgl.Popup({ offset: 14, closeButton: false }).setHTML(html);
+            var html = (window.SaleRoute && window.SaleRoute.popupHtml)
+              ? window.SaleRoute.popupHtml(seller)
+              : ('<strong>' + escapeHtml(seller.address || 'Registered seller') + '</strong>' +
+                 (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : ''));
+            var popup = new mapboxgl.Popup({ offset: 14, closeButton: false, maxWidth: '260px' }).setHTML(html);
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
               .setPopup(popup)
               .addTo(map);
-            window.SaleRoute.registerMarker(seller, el, popup);
+            if (window.SaleRoute) window.SaleRoute.registerMarker(seller, el, popup);
             allMarkers.push({ el: el, text: cats.toLowerCase() });
           });
           buildFilterBar();
@@ -381,6 +385,5 @@
     });
   })();
 </script>
-<script src="/route.js"></script>
 </body>
 </html>
