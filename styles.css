@@ -1026,12 +1026,12 @@ a:hover { color: var(--ink); }
 
 /* Park marker */
 .map-park-marker {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--red);
   border: 2px solid var(--ink);
-  box-shadow: 2px 2px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
   cursor: pointer;
 }
 .map-park-marker:hover { background: var(--yellow); }
