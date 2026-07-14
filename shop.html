@@ -362,12 +362,12 @@
             var el = document.createElement('div');
             el.className = 'map-park-marker';
             var cats = seller.categories || '';
-            var html = '<strong>Registered seller</strong>' + escapeHtml(seller.address) +
-              (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : '');
+            var html = window.SaleRoute.popupHtml(seller);
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
-              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false }).setHTML(html))
+              .setPopup(new mapboxgl.Popup({ offset: 14, closeButton: false }).setHTML(html))
               .addTo(map);
+            window.SaleRoute.registerMarker(seller, el);
             allMarkers.push({ el: el, text: cats.toLowerCase() });
           });
           buildFilterBar();
@@ -380,5 +380,6 @@
     });
   })();
 </script>
+<script src="/route.js"></script>
 </body>
 </html>

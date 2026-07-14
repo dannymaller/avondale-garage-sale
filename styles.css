@@ -1026,15 +1026,17 @@ a:hover { color: var(--ink); }
 
 /* Park marker */
 .map-park-marker {
-  width: 28px;
-  height: 28px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--red);
-  border: 3px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
   cursor: pointer;
 }
 .map-park-marker:hover { background: var(--yellow); }
+/* pins already added to the route read as "done" at a glance */
+.map-park-marker.is-in-route { background: var(--green); }
 
 /* Park popup */
 .map-canvas .mapboxgl-popup-content {
@@ -1624,3 +1626,168 @@ a:hover { color: var(--ink); }
 
 .cd-cal-menu a:hover,
 .cd-cal-menu button:hover { background: var(--yellow); color: var(--ink); }
+
+
+/* ============================================================
+   ROUTE BUILDER
+   ============================================================ */
+
+/* popup actions */
+.popup-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(244, 239, 227, 0.22);
+}
+.popup-add {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .02em;
+  padding: 7px 10px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.popup-add:hover { background: var(--cream); }
+.popup-add.is-added { background: var(--green); color: var(--cream); }
+.popup-add:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+.popup-dir {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+.popup-dir:hover { color: var(--yellow); }
+
+/* the tray */
+.route-tray {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 900;
+  width: 300px;
+  max-width: calc(100vw - 32px);
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 14px;
+  font-family: var(--sans);
+}
+.route-tray[hidden] { display: none; }
+
+.route-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+.route-head b {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--ink);
+}
+.route-clear {
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.route-list {
+  list-style: none;
+  margin: 0 0 9px;
+  padding: 0;
+  max-height: 190px;
+  overflow-y: auto;
+}
+.route-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(28, 26, 23, 0.12);
+}
+.route-list li:last-child { border-bottom: 0; }
+.route-n {
+  flex: 0 0 auto;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 19px;
+  text-align: center;
+}
+.route-addr {
+  flex: 1 1 auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.route-remove {
+  flex: 0 0 auto;
+  background: none;
+  border: 0;
+  font-size: 17px;
+  line-height: 1;
+  color: var(--ink);
+  opacity: .5;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+.route-remove:hover { opacity: 1; color: var(--red); }
+
+.route-note {
+  margin: 0 0 10px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: rgba(28, 26, 23, 0.62);
+}
+.route-note.is-full { color: var(--red); font-weight: 700; }
+
+.route-go {
+  display: block;
+  width: 100%;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding: 11px 12px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+}
+.route-go:hover { background: var(--green); color: var(--cream); }
+
+@media (max-width: 640px) {
+  .route-tray {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  .route-list { max-height: 132px; }
+}

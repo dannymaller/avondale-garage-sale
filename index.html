@@ -244,7 +244,7 @@
     <div>
       <div class="grid-item-num">For sellers</div>
       <h3 class="grid-item-title">Have stuff to move?</h3>
-      <p class="grid-item-body" style="margin-bottom: 24px;">More than 90 neighbors are already on the map. Register your address to join them. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
+      <p class="grid-item-body" style="margin-bottom: 24px;">More than 80 neighbors are already on the map. Register your address to join them. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
       <a href="/register" class="btn btn-dark">Register your sale →</a>
     </div>
     <div>
@@ -858,13 +858,12 @@
             // Popup markup comes from the feed (built in the Apps Script) so it reads
             // the same on every page. The fallback builds it locally in case an older
             // feed that has no popup field is still deployed.
-            var html = seller.popup || ('<strong>' + escapeHtml(seller.address) + '</strong>' +
-              (hours ? '<span class="popup-hours" style="display:block;margin-top:5px;font-weight:600;font-size:12.5px;color:#f4b71b">' + escapeHtml(hours) + '</span>' : '') +
-              (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : ''));
+            var html = window.SaleRoute.popupHtml(seller);
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
-              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false }).setHTML(html))
+              .setPopup(new mapboxgl.Popup({ offset: 14, closeButton: false }).setHTML(html))
               .addTo(map);
+            window.SaleRoute.registerMarker(seller, el);
             allMarkers.push({ el: el, text: cats.toLowerCase() });
           });
           buildFilterBar();
@@ -930,5 +929,6 @@
   .post-form-msg[hidden] { display: none; }
   .post-form-msg.is-ok { background: var(--green, #4a8a51); color: #fff; }
 </style>
+<script src="/route.js"></script>
 </body>
 </html>
