@@ -17,6 +17,19 @@
 
   function keyOf(lng, lat) { return (+lng).toFixed(6) + ',' + (+lat).toFixed(6); }
 
+  /* Google labels a bare lat/lng as "Dropped pin", so hand it the street address
+   * instead and let it geocode. Only do that when the address actually looks like
+   * a street address; anything odd falls back to coordinates, which are exact even
+   * if they read as a dropped pin. */
+  function destOf(addr, lng, lat) {
+    var a = String(addr || '').trim();
+    if (/^\d+\s+\S/.test(a)) {
+      if (!/chicago/i.test(a)) a += ', Chicago, IL';
+      return a;
+    }
+    return lat + ',' + lng;
+  }
+
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -45,7 +58,7 @@
 
     // Single-stop directions, walking, straight to the house.
     var dir = 'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=' +
-              encodeURIComponent(lat + ',' + lng);
+              encodeURIComponent(destOf(addr, lng, lat));
 
     return '' +
       '<strong>' + esc(addr) + '</strong>' +
@@ -147,7 +160,7 @@
   /* ---------- hand off to Google Maps ---------- */
   function openInGoogleMaps() {
     if (!stops.length) return;
-    var pts = stops.map(function (s) { return s.lat + ',' + s.lng; });
+    var pts = stops.map(function (s) { return destOf(s.addr, s.lng, s.lat); });
 
     // Origin is left off on purpose: Google then starts from the user's own
     // location, which is what someone standing on the street actually wants.
