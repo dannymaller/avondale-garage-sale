@@ -154,7 +154,8 @@
         '<button type="button" id="route-add-btn">Add</button>' +
       '</div>' +
       '<p class="route-note" id="route-note"></p>' +
-      '<button type="button" class="route-go" id="route-go">Open route in Google Maps →</button>' +
+      '<a class="route-go" id="route-go" target="_blank" rel="noopener">' +
+        'Open route in Google Maps →</a>' +
       '<button type="button" class="route-clear" id="route-clear">Clear route</button>';
     document.body.appendChild(tray);
 
@@ -170,7 +171,6 @@
     tray.querySelector('#route-clear').addEventListener('click', function () {
       stops = []; save(); render();
     });
-    tray.querySelector('#route-go').addEventListener('click', openInGoogleMaps);
 
     // ---- manual entry, with autocomplete over the registered sellers ----
     // Suggestions come from the seller feed already in memory, so this is instant
@@ -428,7 +428,17 @@
       : 'Walking directions, starting from wherever you are.';
     noteEl.classList.toggle('is-full', full);
 
-    tray.querySelector('#route-go').disabled = n === 0;
+    var go = tray.querySelector('#route-go');
+    var url = routeUrl();
+    if (url) {
+      go.setAttribute('href', url);
+      go.classList.remove('is-disabled');
+      go.removeAttribute('aria-disabled');
+    } else {
+      go.removeAttribute('href');          // no href = not a link = not clickable
+      go.classList.add('is-disabled');
+      go.setAttribute('aria-disabled', 'true');
+    }
     tray.querySelector('#route-clear').hidden = n === 0;
     inputEl.disabled = full;
 
@@ -482,19 +492,24 @@
   }
 
   /* ---------- hand off to Google Maps ---------- */
-  function openInGoogleMaps() {
-    if (!stops.length) return;
-    var pts = stops.map(function (s) { return destOf(s.addr, s.lng, s.lat); });
+  // Returns the URL only. The button is a real <a href> rather than a scripted
+  // window.open: window.open with a features string makes Chrome open a popup that
+  // can land on about:blank, and iOS Safari blocks it outright. A plain link just
+  // works, and lets people long-press to open it however they like.
+  function routeUrl() {
+    if (!stops.length) return '';
+    var pts = stops.map(function (s) { return destOf(s.addr, s.lng, s.lat); })
+                   .filter(function (p) { return !!p; });
+    if (!pts.length) return '';
 
     // Origin is left off on purpose: Google then starts from the user's own
     // location, which is what someone standing on the street actually wants.
     var dest = pts[pts.length - 1];
     var mid = pts.slice(0, -1);
 
-    var url = 'https://www.google.com/maps/dir/?api=1&travelmode=walking' +
-              '&destination=' + encodeURIComponent(dest) +
-              (mid.length ? '&waypoints=' + encodeURIComponent(mid.join('|')) : '');
-    window.open(url, '_blank', 'noopener');
+    return 'https://www.google.com/maps/dir/?api=1&travelmode=walking' +
+           '&destination=' + encodeURIComponent(dest) +
+           (mid.length ? '&waypoints=' + encodeURIComponent(mid.join('|')) : '');
   }
 
   /* ---------- wiring ---------- */

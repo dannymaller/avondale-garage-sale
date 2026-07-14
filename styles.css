@@ -1897,7 +1897,7 @@ a:hover { color: var(--ink); }
 }
 .route-badge[hidden] { display: none; }
 
-.route-go:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+
 
 .route-list {
   list-style: none;
@@ -2019,6 +2019,8 @@ a:hover { color: var(--ink); }
 }
 .route-note.is-full { color: var(--red); font-weight: 700; }
 
+/* An <a>, not a <button>: styled to look the same, but the browser does the
+   navigating, which is far more reliable than window.open. */
 .route-go {
   display: block;
   width: 100%;
@@ -2027,6 +2029,8 @@ a:hover { color: var(--ink); }
   font-size: 13px;
   letter-spacing: .03em;
   text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
   padding: 11px 12px;
   background: var(--yellow);
   color: var(--ink);
@@ -2035,6 +2039,12 @@ a:hover { color: var(--ink); }
   cursor: pointer;
 }
 .route-go:hover { background: var(--green); color: var(--cream); }
+.route-go.is-disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
+}
 
 @media (max-width: 640px) {
   .route-tray {
