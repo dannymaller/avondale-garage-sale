@@ -367,6 +367,10 @@
     registerMarker: function (seller, el) {
       var k = keyOf(seller.coords[0], seller.coords[1]);
       markers[k] = el;
+      // Pins arrive after the map loads, which is long after the saved route was
+      // restored. So mark this one on the spot instead of waiting for the next
+      // render, otherwise a reloaded route shows red pins for stops it already has.
+      if (stops.some(function (s) { return s.key === k; })) el.classList.add('is-in-route');
       if (seller.address && !known.some(function (x) { return x.key === k; })) {
         known.push({
           key: k,
