@@ -20,6 +20,10 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-PTKY9ETJE0');
+  // Helper for custom events. Never throws, even if gtag is blocked.
+  window.track = function(name, params) {
+    try { gtag('event', name, params || {}); } catch (e) {}
+  };
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://garagesale.avondaleneighbors.org/permit">
@@ -86,7 +90,7 @@
   <div class="prereq-callout">
     <strong>Haven't registered for the sale yet?</strong>
     <p>Do that first. It's how your address gets on the map for shoppers. The permit comes second.</p>
-    <a href="/register" class="btn btn-dark">Register first →</a>
+    <a href="/register" class="btn btn-dark" data-cta="permit_register_first">Register first →</a>
   </div>
 
   <h2>The fastest way</h2>
@@ -101,7 +105,7 @@
   <p class="callout-inline"><strong>Recommended:</strong> grab your permit by <strong>Thursday, July 16</strong>. That's two days before the event, which gives you a buffer in case anything's missing. You can technically get it the day of, but don't cut it that close.</p>
 
   <h2>Where to go</h2>
-  <p>Our target area touches three wards. Find yours below. If you're not sure which ward your address is in, look it up at <a href="https://gisapps.chicago.gov/WardGeocode/" target="_blank" rel="noopener">chicago.gov's ward lookup</a>. Any of the three offices can also direct you if you walk into the wrong one.</p>
+  <p>Our target area touches three wards. Find yours below. If you're not sure which ward your address is in, look it up at <a href="https://gisapps.chicago.gov/WardGeocode/" target="_blank" rel="noopener" data-cta="ward_lookup">chicago.gov's ward lookup</a>. Any of the three offices can also direct you if you walk into the wrong one.</p>
 
   <div class="permit-wards">
 
@@ -115,7 +119,7 @@
         <a href="tel:7739853510">773-985-3510</a><br>
         <a href="mailto:ward35@cityofchicago.org">ward35@cityofchicago.org</a>
       </p>
-      <a href="https://www.ward35.org/" class="btn btn-dark" target="_blank" rel="noopener">ward35.org →</a>
+      <a href="https://www.ward35.org/" class="btn btn-dark" target="_blank" rel="noopener" data-cta="ward35_site">ward35.org →</a>
     </div>
 
     <div class="permit-ward">
@@ -128,7 +132,7 @@
         <a href="tel:7738242000">773-824-2000</a><br>
         <a href="mailto:ward31@cityofchicago.org">ward31@cityofchicago.org</a>
       </p>
-      <a href="https://www.ward31.org/" class="btn btn-dark" target="_blank" rel="noopener">ward31.org →</a>
+      <a href="https://www.ward31.org/" class="btn btn-dark" target="_blank" rel="noopener" data-cta="ward31_site">ward31.org →</a>
     </div>
 
     <div class="permit-ward">
@@ -141,7 +145,7 @@
         <a href="tel:7736287874">773-628-7874</a><br>
         <a href="mailto:Ward30@cityofchicago.org">Ward30@cityofchicago.org</a>
       </p>
-      <a href="https://www.30thward.org/" class="btn btn-dark" target="_blank" rel="noopener">30thward.org →</a>
+      <a href="https://www.30thward.org/" class="btn btn-dark" target="_blank" rel="noopener" data-cta="ward30_site">30thward.org →</a>
     </div>
 
   </div>
@@ -153,7 +157,7 @@
     <li><strong>Fax or mail.</strong> Both are accepted. Fax numbers and mailing addresses are listed on each ward's website.</li>
   </ul>
 
-  <p><a href="https://www.chicago.gov/content/dam/city/depts/streets/general/Garage_Sale_Application_English_2024.pdf" target="_blank" rel="noopener">Download the application (PDF)</a>. You only need to fill out page 2.</p>
+  <p><a href="https://www.chicago.gov/content/dam/city/depts/streets/general/Garage_Sale_Application_English_2024.pdf" target="_blank" rel="noopener" data-cta="permit_pdf_download">Download the application (PDF)</a>. You only need to fill out page 2.</p>
 
   <h2>The rules in 30 seconds</h2>
   <ul>
@@ -163,7 +167,7 @@
     <li>Signs can <strong>only be posted on your own property</strong>, not on poles, fences, or city property. Fines are $50–$500 per day per sign.</li>
   </ul>
 
-  <p style="margin-top: 48px;">Questions? Email <a href="mailto:garagesale@avondaleneighbors.org">garagesale@avondaleneighbors.org</a> and we'll help you figure it out.</p>
+  <p style="margin-top: 48px;">Questions? Email <a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a> and we'll help you figure it out.</p>
 
 </main>
 
@@ -187,16 +191,6 @@
       <h4>Get in touch</h4>
       <ul>
         <li>
-          <a href="https://www.instagram.com/avondalegaragesale/" target="_blank" rel="noopener" class="social-icon" aria-label="Follow on Instagram">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-              <rect x="2" y="2" width="20" height="20" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
-              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/>
-              <circle cx="17.4" cy="6.6" r="1.4" fill="currentColor"/>
-            </svg>
-            <span class="social-icon-label">Instagram</span>
-          </a>
-        </li>
-        <li>
           <a href="https://www.facebook.com/share/1H7Sde6Nrx/" target="_blank" rel="noopener" class="social-icon" aria-label="Follow on Facebook">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.017 1.792-4.683 4.533-4.683 1.312 0 2.686.235 2.686.235v2.962h-1.513c-1.491 0-1.956.93-1.956 1.886v2.262h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
@@ -205,12 +199,12 @@
           </a>
         </li>
         <li>
-          <a href="mailto:garagesale@avondaleneighbors.org" class="social-icon" aria-label="Email garagesale@avondaleneighbors.org">
+          <a href="mailto:danny.maller@gmail.com" class="social-icon" aria-label="Email Danny">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
               <path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 6h18v12H3z"/>
               <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6l9 7 9-7"/>
             </svg>
-            <span class="social-icon-label">garagesale@avondaleneighbors.org</span>
+            <span class="social-icon-label">danny.maller@gmail.com</span>
           </a>
         </li>
       </ul>
@@ -232,6 +226,26 @@
       toggle.classList.toggle('wiggle', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+  })();
+</script>
+
+<script>
+  // Site-wide click events: CTAs, email links, and links inside map popups.
+  (function() {
+    var PAGE = 'permit';
+    document.addEventListener('click', function(e) {
+      if (!e.target || !e.target.closest) return;
+      var cta = e.target.closest('[data-cta]');
+      if (cta) track('cta_click', { cta_id: cta.getAttribute('data-cta'), page: PAGE });
+      var mail = e.target.closest('a[href^="mailto:"]');
+      if (mail) track('email_click', { page: PAGE });
+      var pop = e.target.closest('.mapboxgl-popup a');
+      if (pop) {
+        var href = pop.getAttribute('href') || '';
+        var isMaps = /google\.[^\/]+\/maps|maps\.app\.goo\.gl|maps\.apple\.com/i.test(href);
+        track(isMaps ? 'open_directions' : 'seller_popup_link', { link_url: href, page: PAGE });
+      }
     });
   })();
 </script>

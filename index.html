@@ -15,11 +15,6 @@
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
-<link rel="preconnect" href="https://api.mapbox.com" crossorigin>
-<link rel="preconnect" href="https://events.mapbox.com" crossorigin>
-<link rel="preconnect" href="https://script.google.com" crossorigin>
-<link rel="dns-prefetch" href="https://api.mapbox.com">
-<link rel="preload" as="script" href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.js">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.css" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PTKY9ETJE0"></script>
@@ -28,6 +23,10 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-PTKY9ETJE0');
+  // Helper for custom events. Never throws, even if gtag is blocked.
+  window.track = function(name, params) {
+    try { gtag('event', name, params || {}); } catch (e) {}
+  };
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://garagesale.avondaleneighbors.org/">
@@ -61,12 +60,12 @@
       "addressRegion": "IL",
       "postalCode": "60618",
       "addressCountry": "US",
-      "streetAddress": "Between Belmont, Diversey, Pulaski, and Kedzie Avenues"
+      "streetAddress": "Between Belmont, Diversey, Pulaski, and Milwaukee Avenues"
     },
     "geo": {
       "@type": "GeoCoordinates",
       "latitude": 41.9345,
-      "longitude": -87.7175
+      "longitude": -87.7280
     }
   },
   "image": [
@@ -140,11 +139,6 @@
 
   <div class="hero-stars">★ ★ ★</div>
 
-  <div class="hero-count" id="hero-count" data-base="80" aria-label="Neighbors signed up so far">
-    <span class="hero-count-num" id="hero-count-num">80+</span>
-    <span class="hero-count-label">Neighbors<br>signed up so far</span>
-  </div>
-
     <div class="countdown" role="timer" aria-label="Countdown to sale day, Saturday July 18, 2026">
     <div class="cd-nums" id="cd-nums">
       <div class="cd-unit"><b id="cd-days">–</b><span>Days</span></div>
@@ -165,14 +159,14 @@
 
   <div class="dayof" id="dayof" hidden>
     <div class="dayof-head">Happening today<br><span class="go">10<span class="dash">&ndash;</span>4</span></div>
-    <a href="#the-area" class="btn btn-yellow dayof-btn">Open the live map →</a>
+    <a href="#the-area" class="btn btn-yellow dayof-btn" data-cta="dayof_open_map">Open the live map →</a>
   </div>
 
   <p class="hero-sub">Neighbors opening up at once. One walking loop. Every kind of treasure you didn't know you needed.</p>
 
   <div class="hero-cta-row">
-    <a href="/register" class="btn btn-yellow" id="cta-host">Host a sale →</a>
-    <a href="/shop" class="btn btn-dark">Plan your route</a>
+    <a href="/register" class="btn btn-yellow" id="cta-host" data-cta="hero_host">Host a sale →</a>
+    <a href="/shop" class="btn btn-dark" data-cta="hero_plan_route">Plan your route</a>
   </div>
 
   <div class="postwrap" id="postwrap" hidden>
@@ -237,7 +231,7 @@
     <div class="map-wrap map-wrap-large">
       <div id="boundary-map" class="map-canvas" aria-label="Map of the Avondale Garage Sale boundary"></div>
     </div>
-    <p class="map-caption">The boundary is set. It runs a full mile of Belmont, from Pulaski east to Kedzie, and south to Diversey, drawn around where neighbors actually signed up. Anyone in Avondale can register, and sellers outside the shaded area still go on the map.</p>
+    <p class="map-caption">Our year-one target: about 30 walkable blocks in southwest Avondale, picked for being walkable and avoiding major-road crossings. The shaded area grows as nearby neighbors sign up. Anyone in Avondale can register.</p>
   </div>
 </section>
 
@@ -249,14 +243,14 @@
     <div>
       <div class="grid-item-num">For sellers</div>
       <h3 class="grid-item-title">Have stuff to move?</h3>
-      <p class="grid-item-body" style="margin-bottom: 24px;">More than 80 neighbors are already on the map. Register your address to join them. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
-      <a href="/register" class="btn btn-dark">Register your sale →</a>
+      <p class="grid-item-body" style="margin-bottom: 24px;">Register your address to get on the digital map. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
+      <a href="/register" class="btn btn-dark" data-cta="section_register">Register your sale →</a>
     </div>
     <div>
       <div class="grid-item-num">For shoppers</div>
       <h3 class="grid-item-title">Coming to browse?</h3>
       <p class="grid-item-body" style="margin-bottom: 24px;">No registration needed, just show up. The digital map and a few tips on parking, transit, and payment are over here so your Saturday goes smoothly.</p>
-      <a href="/shop" class="btn btn-outline">Read the guide →</a>
+      <a href="/shop" class="btn btn-outline" data-cta="section_shop_guide">Read the guide →</a>
     </div>
   </div>
 </section>
@@ -320,14 +314,14 @@
 
   <div class="sponsor-grid">
     <div>
-      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="sponsor-logo-box" aria-label="Visit Act Now Print &amp; Promote">
+      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="sponsor-logo-box" data-cta="sponsor_actnow_logo" aria-label="Visit Act Now Print &amp; Promote">
         <img src="/assets/actnow-logo.svg" alt="Act Now Print &amp; Promote" loading="lazy">
       </a>
       <div class="grid-item-num">Sponsor</div>
       <h3 class="grid-item-title">Act Now Print &amp; Promote</h3>
       <p class="grid-item-body">Full-service custom printer with a location in Avondale at 3130 N Rockwell St. They specialize in branded apparel, large format signage, promotional products, and traditional paper printing.</p>
       <p class="grid-item-body sponsor-credit">Providing yard signs and flyers for the event.</p>
-      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="btn btn-outline">Visit their site →</a>
+      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="btn btn-outline" data-cta="sponsor_actnow_site">Visit their site →</a>
     </div>
   </div>
 </section>
@@ -372,7 +366,7 @@
           </a>
         </li>
         <li>
-          <a href="mailto:garagesale@avondaleneighbors.org" class="social-icon" aria-label="Email garagesale@avondaleneighbors.org">
+          <a href="mailto:garagesale@avondaleneighbors.org" class="social-icon" aria-label="Email Danny">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
               <path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 6h18v12H3z"/>
               <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6l9 7 9-7"/>
@@ -452,7 +446,7 @@
       countdown.hidden = true;
       var title = document.querySelector('.hero-title');
       if (title) title.innerHTML = 'See you<br><span class="yellow">next year</span>';
-      ['.hero-fan', '.hero-count', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
+      ['.hero-fan', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
         document.querySelectorAll(sel).forEach(function(el) { el.style.display = 'none'; });
       });
       var post = document.getElementById('postwrap');
@@ -489,92 +483,6 @@
 
 <script>
   (function() {
-    // Live registrant tally, with a count-up animation.
-    // Reads the same seller feed the map uses and floors the number to the nearest 5
-    // with a "+", so it only ever climbs and never under-reports.
-    var wrap = document.getElementById('hero-count');
-    var out = document.getElementById('hero-count-num');
-    if (!wrap || !out) return;
-
-    var base = parseInt(wrap.getAttribute('data-base'), 10) || 80;
-    var COUNT_URL = 'https://script.google.com/macros/s/AKfycbwRLwDE6bQFx3uR-0Zm9TL5LauKFhztsBqfWzo-ledPryup7tcNOecm4hEo3LWgVG01/exec?action=sellers';
-    var DURATION = 1500;
-    var WAIT_CAP = 2000;   // how long we'll hold the animation waiting on the feed
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    var shown = 0;
-    var raf = null;
-
-    function paint(n) {
-      shown = n;
-      out.textContent = n + '+';
-      wrap.setAttribute('aria-label', n + ' or more neighbors signed up so far');
-    }
-
-    // Ease-out cubic: fast off the line, settles gently on the final number.
-    function countTo(target, ms) {
-      if (raf) cancelAnimationFrame(raf);
-      if (reduced || target <= shown) { paint(target); return; }
-      var from = shown, delta = target - from, dur = ms || DURATION, t0 = null;
-      function step(ts) {
-        if (t0 === null) t0 = ts;
-        var p = Math.min((ts - t0) / dur, 1);
-        paint(Math.round(from + delta * (1 - Math.pow(1 - p, 3))));
-        if (p < 1) raf = requestAnimationFrame(step);
-      }
-      raf = requestAnimationFrame(step);
-    }
-
-    // Screen readers read the wrapper's label, not every ticking digit.
-    out.setAttribute('aria-hidden', 'true');
-    paint(0);
-
-    // Kick the request off NOW, in parallel with page load, so its latency is spent
-    // while the user is still looking at the hero rather than after the count lands.
-    var settled = false;
-    var realCount = null;
-
-    fetch(COUNT_URL)
-      .then(function(r) { return r.text(); })
-      .then(function(t) { try { return JSON.parse(t); } catch (e) { return null; } })
-      .then(function(data) {
-        var live = data && data.sellers ? data.sellers.length : 0;
-        var floored = Math.floor(live / 5) * 5;
-        realCount = floored > base ? floored : base;
-      })
-      .catch(function() { realCount = base; })
-      .then(function() {
-        if (realCount > base) wrap.classList.add('is-bumped');
-        // If the count already ran to the baseline, top it up quickly instead of
-        // replaying a full second animation.
-        if (settled && realCount > shown) countTo(realCount, 500);
-      });
-
-    // Run one animation, to the real number, once we have it. If the feed is slow,
-    // fall back to the baseline rather than leaving the hero sitting at zero.
-    function run() {
-      var waited = 0;
-      (function poll() {
-        if (realCount !== null) { settled = true; countTo(realCount); return; }
-        if (waited >= WAIT_CAP) { settled = true; countTo(base); return; }
-        waited += 50;
-        setTimeout(poll, 50);
-      })();
-    }
-
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) { io.disconnect(); run(); }
-      }, { threshold: 0.4 });
-      io.observe(wrap);
-    } else {
-      run();
-    }
-  })();
-</script>
-
-<script>
-  (function() {
     var btn = document.getElementById('add-to-cal');
     var menu = document.getElementById('cal-menu');
     if (!btn || !menu) return;
@@ -587,31 +495,20 @@
       e.stopPropagation();
       setOpen(menu.hidden);
     });
+    menu.addEventListener('click', function(e) {
+      var a = e.target.closest ? e.target.closest('a') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      var cal = /calendar\.google/.test(href) ? 'google'
+        : /outlook/.test(href) ? 'outlook'
+        : 'apple';
+      track('add_to_calendar', { calendar: cal });
+    });
     document.addEventListener('click', function(e) {
       if (!menu.hidden && !menu.contains(e.target)) setOpen(false);
     });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') setOpen(false);
-    });
-  })();
-</script>
-
-<script>
-  (function() {
-    // Calendar intent tracking. Sends two GA4 events:
-    //  add_to_calendar_open   -> tapped the button and saw the menu
-    //  add_to_calendar_select -> chose a calendar (Google / Outlook / Apple)
-    // Note: a "select" means the pre-filled event opened, not a confirmed save.
-    // Google and Outlook finish saving on their own pages, which can't report back.
-    if (typeof gtag !== 'function') return;
-    var open = document.getElementById('add-to-cal');
-    if (open) open.addEventListener('click', function() {
-      gtag('event', 'add_to_calendar_open');
-    });
-    document.querySelectorAll('#cal-menu a').forEach(function(a) {
-      a.addEventListener('click', function() {
-        gtag('event', 'add_to_calendar_select', { calendar: a.textContent.trim() });
-      });
     });
   })();
 </script>
@@ -660,6 +557,7 @@
       }
       submit.disabled = true;
       submit.textContent = 'Signing you up...';
+      track('signup_2027_submit', { interest: document.getElementById('nx-interest').value });
       var body = new URLSearchParams();
       body.append('name', name);
       body.append('email', email);
@@ -669,11 +567,13 @@
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data && data.ok) {
+            track('signup_2027_success');
             form.querySelectorAll('.pf-field, button').forEach(function(el) { el.style.display = 'none'; });
             say("You're on the list. See you in 2027.", true);
           } else { throw new Error('bad response'); }
         })
         .catch(function() {
+          track('signup_2027_error');
           submit.disabled = false;
           submit.textContent = 'Sign me up →';
           say('Something went wrong. Try again, or email garagesale@avondaleneighbors.org.', false);
@@ -681,8 +581,6 @@
     });
   })();
 </script>
-
-<script src="/route.js"></script>
 
 <script>
   (function() {
@@ -733,8 +631,8 @@
 
     var boundary = [
       [-87.7272, 41.9391], // NW: Belmont & Pulaski
-      [-87.7077, 41.9393], // NE: Belmont & Kedzie
-      [-87.7076, 41.9320], // SE: Diversey & Kedzie
+      [-87.7238, 41.9392], // NE: Belmont & Milwaukee
+      [-87.7118, 41.9319], // SE: Diversey & Milwaukee
       [-87.7271, 41.9317], // SW: Diversey & Pulaski
       [-87.7272, 41.9391]  // close polygon
     ];
@@ -742,8 +640,8 @@
     var map = new mapboxgl.Map({
       container: 'boundary-map',
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [-87.7175, 41.9355],
-      zoom: 13.1,
+      center: [-87.7195, 41.9355],
+      zoom: 13.2,
       attributionControl: { compact: true }
     });
 
@@ -825,6 +723,11 @@
         if (id === 'all') { activeFilters = {}; }
         else if (activeFilters[id]) { delete activeFilters[id]; }
         else { activeFilters[id] = true; }
+        track('map_filter_toggle', {
+          filter_id: id,
+          active: id === 'all' ? true : !!activeFilters[id],
+          page: 'home'
+        });
         refreshMarkers();
       }
 
@@ -865,16 +768,16 @@
             // Popup markup comes from the feed (built in the Apps Script) so it reads
             // the same on every page. The fallback builds it locally in case an older
             // feed that has no popup field is still deployed.
-            var html = (window.SaleRoute && window.SaleRoute.popupHtml)
-              ? window.SaleRoute.popupHtml(seller)
-              : ('<strong>' + escapeHtml(seller.address || 'Registered seller') + '</strong>' +
-                 (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : ''));
-            var popup = new mapboxgl.Popup({ offset: 14, closeButton: false, maxWidth: '260px' }).setHTML(html);
+            var html = seller.popup || ('<strong>' + escapeHtml(seller.address) + '</strong>' +
+              (hours ? '<span class="popup-hours" style="display:block;margin-top:5px;font-weight:600;font-size:12.5px;color:#f4b71b">' + escapeHtml(hours) + '</span>' : '') +
+              (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : ''));
+            el.addEventListener('click', function() {
+              track('map_marker_tap', { seller_address: seller.address, page: 'home' });
+            });
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
-              .setPopup(popup)
+              .setPopup(new mapboxgl.Popup({ offset: 18, closeButton: false }).setHTML(html))
               .addTo(map);
-            if (window.SaleRoute) window.SaleRoute.registerMarker(seller, el, popup);
             allMarkers.push({ el: el, text: cats.toLowerCase() });
           });
           buildFilterBar();
@@ -888,12 +791,17 @@
     });
     } // end initMap
 
-    // Start immediately on page load rather than waiting for the map to be
-    // scrolled near. The Mapbox library and the seller feed are the two slowest
-    // things on the page, so they should be in flight from the first moment.
-    // begin() is idempotent, and both requests are async, so nothing here blocks
-    // rendering the rest of the page.
-    begin();
+    // Only load Mapbox and start the map when it is near the viewport.
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) { io.disconnect(); begin(); break; }
+        }
+      }, { rootMargin: '400px' });
+      io.observe(mapEl);
+    } else {
+      window.addEventListener('load', begin);
+    }
   })();
 </script>
 
@@ -935,5 +843,25 @@
   .post-form-msg[hidden] { display: none; }
   .post-form-msg.is-ok { background: var(--green, #4a8a51); color: #fff; }
 </style>
+
+<script>
+  // Site-wide click events: CTAs, email links, and links inside map popups.
+  (function() {
+    var PAGE = 'home';
+    document.addEventListener('click', function(e) {
+      if (!e.target || !e.target.closest) return;
+      var cta = e.target.closest('[data-cta]');
+      if (cta) track('cta_click', { cta_id: cta.getAttribute('data-cta'), page: PAGE });
+      var mail = e.target.closest('a[href^="mailto:"]');
+      if (mail) track('email_click', { page: PAGE });
+      var pop = e.target.closest('.mapboxgl-popup a');
+      if (pop) {
+        var href = pop.getAttribute('href') || '';
+        var isMaps = /google\.[^\/]+\/maps|maps\.app\.goo\.gl|maps\.apple\.com/i.test(href);
+        track(isMaps ? 'open_directions' : 'seller_popup_link', { link_url: href, page: PAGE });
+      }
+    });
+  })();
+</script>
 </body>
 </html>
