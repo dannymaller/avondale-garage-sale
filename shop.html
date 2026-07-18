@@ -20,6 +20,10 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-PTKY9ETJE0');
+  // Helper for custom events. Never throws, even if gtag is blocked.
+  window.track = function(name, params) {
+    try { gtag('event', name, params || {}); } catch (e) {}
+  };
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://garagesale.avondaleneighbors.org/shop">
@@ -320,6 +324,11 @@
         if (id === 'all') { activeFilters = {}; }
         else if (activeFilters[id]) { delete activeFilters[id]; }
         else { activeFilters[id] = true; }
+        track('map_filter_toggle', {
+          filter_id: id,
+          active: id === 'all' ? true : !!activeFilters[id],
+          page: 'shop'
+        });
         refreshMarkers();
       }
 
@@ -368,6 +377,9 @@
               : ('<strong>' + escapeHtml(seller.address || 'Registered seller') + '</strong>' +
                  (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : ''));
             var popup = new mapboxgl.Popup({ offset: 14, closeButton: false, maxWidth: '260px' }).setHTML(html);
+            el.addEventListener('click', function() {
+              track('map_marker_tap', { seller_address: seller.address || '', page: 'shop' });
+            });
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
               .setPopup(popup)
@@ -382,6 +394,36 @@
         });
 
       map.resize();
+    });
+  })();
+</script>
+
+<script>
+  // Site-wide click events: CTAs, email links, directions links anywhere,
+  // and any action inside a map popup (including route.js buttons).
+  (function() {
+    var PAGE = 'shop';
+    var MAPS_RE = /google\.[^\/]+\/maps|maps\.app\.goo\.gl|maps\.apple\.com/i;
+    document.addEventListener('click', function(e) {
+      if (!e.target || !e.target.closest) return;
+      var cta = e.target.closest('[data-cta]');
+      if (cta) track('cta_click', { cta_id: cta.getAttribute('data-cta'), page: PAGE });
+      var mail = e.target.closest('a[href^="mailto:"]');
+      if (mail) track('email_click', { page: PAGE });
+      // Any Google/Apple Maps link, wherever it lives (popup, route panel, copy)
+      var a = e.target.closest('a[href]');
+      if (a && MAPS_RE.test(a.getAttribute('href') || '')) {
+        track('open_directions', { link_url: a.getAttribute('href'), page: PAGE });
+        return;
+      }
+      // Everything else tapped inside a seller popup: route buttons, links
+      var popEl = e.target.closest('.mapboxgl-popup button, .mapboxgl-popup a');
+      if (popEl) {
+        track('map_popup_action', {
+          action_label: (popEl.getAttribute('data-cta') || popEl.textContent || '').trim().slice(0, 60),
+          page: PAGE
+        });
+      }
     });
   })();
 </script>

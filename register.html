@@ -19,6 +19,10 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-PTKY9ETJE0');
+  // Helper for custom events. Never throws, even if gtag is blocked.
+  window.track = function(name, params) {
+    try { gtag('event', name, params || {}); } catch (e) {}
+  };
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://garagesale.avondaleneighbors.org/register">
@@ -251,6 +255,14 @@
     var form = document.getElementById('register-form');
     if (!form) return;
     var submitBtn = document.getElementById('submit-btn');
+
+    // Fires once when someone begins typing, so drop-off is measurable.
+    var formStarted = false;
+    form.addEventListener('input', function() {
+      if (formStarted) return;
+      formStarted = true;
+      track('register_start');
+    });
     var successBox = document.getElementById('form-success');
     var errorBox = document.getElementById('form-error');
     var errorMsg = document.getElementById('form-error-msg');
@@ -297,10 +309,12 @@
       var data = getValues();
       var validationError = validate(data);
       if (validationError) {
+        track('register_error', { error_type: 'validation' });
         showError(validationError);
         return;
       }
 
+      track('register_submit', { sale_type: data.sale_type });
       submitBtn.disabled = true;
       var originalLabel = submitBtn.textContent;
       submitBtn.textContent = 'Submitting…';
@@ -333,6 +347,7 @@
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
         if (json && json.ok) {
+          track('register_success', { sale_type: data.sale_type });
           form.hidden = true;
           successBox.hidden = false;
           successBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -341,11 +356,42 @@
         }
       })
       .catch(function(err) {
+        track('register_error', { error_type: 'network' });
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
         showError('Submission failed. Please try again, or email garagesale@avondaleneighbors.org directly.');
         console.error('Form error:', err);
       });
+    });
+  })();
+</script>
+
+<script>
+  // Site-wide click events: CTAs, email links, directions links anywhere,
+  // and any action inside a map popup (including route.js buttons).
+  (function() {
+    var PAGE = 'register';
+    var MAPS_RE = /google\.[^\/]+\/maps|maps\.app\.goo\.gl|maps\.apple\.com/i;
+    document.addEventListener('click', function(e) {
+      if (!e.target || !e.target.closest) return;
+      var cta = e.target.closest('[data-cta]');
+      if (cta) track('cta_click', { cta_id: cta.getAttribute('data-cta'), page: PAGE });
+      var mail = e.target.closest('a[href^="mailto:"]');
+      if (mail) track('email_click', { page: PAGE });
+      // Any Google/Apple Maps link, wherever it lives (popup, route panel, copy)
+      var a = e.target.closest('a[href]');
+      if (a && MAPS_RE.test(a.getAttribute('href') || '')) {
+        track('open_directions', { link_url: a.getAttribute('href'), page: PAGE });
+        return;
+      }
+      // Everything else tapped inside a seller popup: route buttons, links
+      var popEl = e.target.closest('.mapboxgl-popup button, .mapboxgl-popup a');
+      if (popEl) {
+        track('map_popup_action', {
+          action_label: (popEl.getAttribute('data-cta') || popEl.textContent || '').trim().slice(0, 60),
+          page: PAGE
+        });
+      }
     });
   })();
 </script>

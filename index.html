@@ -28,6 +28,10 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-PTKY9ETJE0');
+  // Helper for custom events. Never throws, even if gtag is blocked.
+  window.track = function(name, params) {
+    try { gtag('event', name, params || {}); } catch (e) {}
+  };
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://garagesale.avondaleneighbors.org/">
@@ -165,14 +169,14 @@
 
   <div class="dayof" id="dayof" hidden>
     <div class="dayof-head">Happening today<br><span class="go">10<span class="dash">&ndash;</span>4</span></div>
-    <a href="#the-area" class="btn btn-yellow dayof-btn">Open the live map →</a>
+    <a href="#the-area" class="btn btn-yellow dayof-btn" data-cta="dayof_open_map">Open the live map →</a>
   </div>
 
   <p class="hero-sub">Neighbors opening up at once. One walking loop. Every kind of treasure you didn't know you needed.</p>
 
   <div class="hero-cta-row">
-    <a href="/register" class="btn btn-yellow" id="cta-host">Host a sale →</a>
-    <a href="/shop" class="btn btn-dark">Plan your route</a>
+    <a href="/register" class="btn btn-yellow" id="cta-host" data-cta="hero_host">Host a sale →</a>
+    <a href="/shop" class="btn btn-dark" data-cta="hero_plan_route">Plan your route</a>
   </div>
 
   <div class="postwrap" id="postwrap" hidden>
@@ -250,13 +254,13 @@
       <div class="grid-item-num">For sellers</div>
       <h3 class="grid-item-title">Have stuff to move?</h3>
       <p class="grid-item-body" style="margin-bottom: 24px;">More than 80 neighbors are already on the map. Register your address to join them. No fee, no minimum, no commitment beyond opening your garage for the morning.</p>
-      <a href="/register" class="btn btn-dark">Register your sale →</a>
+      <a href="/register" class="btn btn-dark" data-cta="section_register">Register your sale →</a>
     </div>
     <div>
       <div class="grid-item-num">For shoppers</div>
       <h3 class="grid-item-title">Coming to browse?</h3>
       <p class="grid-item-body" style="margin-bottom: 24px;">No registration needed, just show up. The digital map and a few tips on parking, transit, and payment are over here so your Saturday goes smoothly.</p>
-      <a href="/shop" class="btn btn-outline">Read the guide →</a>
+      <a href="/shop" class="btn btn-outline" data-cta="section_shop_guide">Read the guide →</a>
     </div>
   </div>
 </section>
@@ -320,14 +324,14 @@
 
   <div class="sponsor-grid">
     <div>
-      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="sponsor-logo-box" aria-label="Visit Act Now Print &amp; Promote">
+      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="sponsor-logo-box" data-cta="sponsor_actnow_logo" aria-label="Visit Act Now Print &amp; Promote">
         <img src="/assets/actnow-logo.svg" alt="Act Now Print &amp; Promote" loading="lazy">
       </a>
       <div class="grid-item-num">Sponsor</div>
       <h3 class="grid-item-title">Act Now Print &amp; Promote</h3>
       <p class="grid-item-body">Full-service custom printer with a location in Avondale at 3130 N Rockwell St. They specialize in branded apparel, large format signage, promotional products, and traditional paper printing.</p>
       <p class="grid-item-body sponsor-credit">Providing yard signs and flyers for the event.</p>
-      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="btn btn-outline">Visit their site →</a>
+      <a href="https://www.actnowprintpromote.com/" target="_blank" rel="noopener" class="btn btn-outline" data-cta="sponsor_actnow_site">Visit their site →</a>
     </div>
   </div>
 </section>
@@ -660,6 +664,7 @@
       }
       submit.disabled = true;
       submit.textContent = 'Signing you up...';
+      track('signup_2027_submit', { interest: document.getElementById('nx-interest').value });
       var body = new URLSearchParams();
       body.append('name', name);
       body.append('email', email);
@@ -669,11 +674,13 @@
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data && data.ok) {
+            track('signup_2027_success');
             form.querySelectorAll('.pf-field, button').forEach(function(el) { el.style.display = 'none'; });
             say("You're on the list. See you in 2027.", true);
           } else { throw new Error('bad response'); }
         })
         .catch(function() {
+          track('signup_2027_error');
           submit.disabled = false;
           submit.textContent = 'Sign me up →';
           say('Something went wrong. Try again, or email garagesale@avondaleneighbors.org.', false);
@@ -825,6 +832,11 @@
         if (id === 'all') { activeFilters = {}; }
         else if (activeFilters[id]) { delete activeFilters[id]; }
         else { activeFilters[id] = true; }
+        track('map_filter_toggle', {
+          filter_id: id,
+          active: id === 'all' ? true : !!activeFilters[id],
+          page: 'home'
+        });
         refreshMarkers();
       }
 
@@ -870,6 +882,9 @@
               : ('<strong>' + escapeHtml(seller.address || 'Registered seller') + '</strong>' +
                  (cats ? '<span class="popup-cats">' + escapeHtml(cats) + '</span>' : ''));
             var popup = new mapboxgl.Popup({ offset: 14, closeButton: false, maxWidth: '260px' }).setHTML(html);
+            el.addEventListener('click', function() {
+              track('map_marker_tap', { seller_address: seller.address || '', page: 'home' });
+            });
             new mapboxgl.Marker({ element: el, anchor: 'center' })
               .setLngLat(seller.coords)
               .setPopup(popup)
@@ -935,5 +950,35 @@
   .post-form-msg[hidden] { display: none; }
   .post-form-msg.is-ok { background: var(--green, #4a8a51); color: #fff; }
 </style>
+
+<script>
+  // Site-wide click events: CTAs, email links, directions links anywhere,
+  // and any action inside a map popup (including route.js buttons).
+  (function() {
+    var PAGE = 'home';
+    var MAPS_RE = /google\.[^\/]+\/maps|maps\.app\.goo\.gl|maps\.apple\.com/i;
+    document.addEventListener('click', function(e) {
+      if (!e.target || !e.target.closest) return;
+      var cta = e.target.closest('[data-cta]');
+      if (cta) track('cta_click', { cta_id: cta.getAttribute('data-cta'), page: PAGE });
+      var mail = e.target.closest('a[href^="mailto:"]');
+      if (mail) track('email_click', { page: PAGE });
+      // Any Google/Apple Maps link, wherever it lives (popup, route panel, copy)
+      var a = e.target.closest('a[href]');
+      if (a && MAPS_RE.test(a.getAttribute('href') || '')) {
+        track('open_directions', { link_url: a.getAttribute('href'), page: PAGE });
+        return;
+      }
+      // Everything else tapped inside a seller popup: route buttons, links
+      var popEl = e.target.closest('.mapboxgl-popup button, .mapboxgl-popup a');
+      if (popEl) {
+        track('map_popup_action', {
+          action_label: (popEl.getAttribute('data-cta') || popEl.textContent || '').trim().slice(0, 60),
+          page: PAGE
+        });
+      }
+    });
+  })();
+</script>
 </body>
 </html>
