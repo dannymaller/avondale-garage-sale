@@ -13,6 +13,12 @@
   var STORE_KEY = 'ags_route_v1';
   var OPEN_KEY  = 'ags_route_open_v1';
 
+  // Analytics: uses window.track from the page's head snippet if present.
+  // A no-op otherwise, so this file works standalone.
+  function t(name, params) {
+    if (typeof window.track === 'function') window.track(name, params);
+  }
+
   var stops = [];
   var markers = {};   // key -> marker element, so we can show what's already added
   var popups  = {};   // key -> mapbox Popup, so tapping "add" can close it cleanly
@@ -168,7 +174,12 @@
     badgeEl = fab.querySelector('#route-badge');
 
     tray.querySelector('#route-min').addEventListener('click', function () { setOpen(false); });
+    tray.querySelector('#route-go').addEventListener('click', function () {
+      if (!stops.length) return;   // disabled state has no href; nothing to count
+      t('route_open_gmaps', { stop_count: stops.length });
+    });
     tray.querySelector('#route-clear').addEventListener('click', function () {
+      t('route_clear', { stop_count: stops.length });
       stops = []; save(); render();
     });
 
@@ -475,6 +486,7 @@
     if (stops.some(function (s) { return s.key === key; })) return;
     if (stops.length >= MAX_STOPS) return;
     stops.push({ key: key, addr: addr, lng: +lng, lat: +lat });
+    t('route_add_stop', { source: 'seller_pin', stop_count: stops.length, seller_address: addr });
     save(); setOpen(true); render();
   }
   // A hand-typed stop has no pin and no coordinates, just text for Google to geocode.
@@ -483,11 +495,13 @@
     if (stops.some(function (s) { return s.key === k; })) return;
     if (stops.length >= MAX_STOPS) return;
     stops.push({ key: k, addr: text, lng: null, lat: null });
+    t('route_add_stop', { source: 'typed', stop_count: stops.length });
     save(); render();
   }
 
   function remove(key) {
     stops = stops.filter(function (s) { return s.key !== key; });
+    t('route_remove_stop', { stop_count: stops.length });
     save(); render();
   }
 
