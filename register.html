@@ -19,10 +19,6 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-PTKY9ETJE0');
-  // Helper for custom events. Never throws, even if gtag is blocked.
-  window.track = function(name, params) {
-    try { gtag('event', name, params || {}); } catch (e) {}
-  };
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://garagesale.avondaleneighbors.org/register">
@@ -110,7 +106,7 @@
   </div>
 
   <div id="form-error" class="form-error" hidden>
-    <strong>Something went wrong.</strong> <span id="form-error-msg">Please try again, or email <a href="mailto:danny.maller@gmail.com">danny.maller@gmail.com</a> directly.</span>
+    <strong>Something went wrong.</strong> <span id="form-error-msg">Please try again, or email <a href="mailto:garagesale@avondaleneighbors.org">garagesale@avondaleneighbors.org</a> directly.</span>
   </div>
 
   <form id="register-form" class="form" novalidate>
@@ -129,7 +125,7 @@
     <div class="form-field">
       <label for="address">Street address</label>
       <input type="text" id="address" name="address" placeholder="e.g. 3021 N Davlin Ct" required>
-      <p class="hint">Anywhere in Avondale is welcome. The shaded area on the map is our starting target, and it grows as nearby neighbors register. Outside-area sign-ups help us figure out where to expand.</p>
+      <p class="hint">The boundary is set. It runs a full mile of Belmont, from Pulaski east to Kedzie, and south to Diversey, drawn around where neighbors actually signed up. Anyone in Avondale can register, and sellers outside the shaded area still go on the map.</p>
     </div>
 
     <div class="form-field">
@@ -199,6 +195,16 @@
       <h4>Get in touch</h4>
       <ul>
         <li>
+          <a href="https://www.instagram.com/avondalegaragesale/" target="_blank" rel="noopener" class="social-icon" aria-label="Follow on Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <rect x="2" y="2" width="20" height="20" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/>
+              <circle cx="17.4" cy="6.6" r="1.4" fill="currentColor"/>
+            </svg>
+            <span class="social-icon-label">Instagram</span>
+          </a>
+        </li>
+        <li>
           <a href="https://www.facebook.com/share/1H7Sde6Nrx/" target="_blank" rel="noopener" class="social-icon" aria-label="Follow on Facebook">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.017 1.792-4.683 4.533-4.683 1.312 0 2.686.235 2.686.235v2.962h-1.513c-1.491 0-1.956.93-1.956 1.886v2.262h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
@@ -207,12 +213,12 @@
           </a>
         </li>
         <li>
-          <a href="mailto:danny.maller@gmail.com" class="social-icon" aria-label="Email Danny">
+          <a href="mailto:garagesale@avondaleneighbors.org" class="social-icon" aria-label="Email garagesale@avondaleneighbors.org">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
               <path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 6h18v12H3z"/>
               <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6l9 7 9-7"/>
             </svg>
-            <span class="social-icon-label">danny.maller@gmail.com</span>
+            <span class="social-icon-label">garagesale@avondaleneighbors.org</span>
           </a>
         </li>
       </ul>
@@ -245,14 +251,6 @@
     var form = document.getElementById('register-form');
     if (!form) return;
     var submitBtn = document.getElementById('submit-btn');
-
-    // Fire once when someone begins typing, so drop-off is measurable.
-    var formStarted = false;
-    form.addEventListener('input', function() {
-      if (formStarted) return;
-      formStarted = true;
-      track('register_start');
-    });
     var successBox = document.getElementById('form-success');
     var errorBox = document.getElementById('form-error');
     var errorMsg = document.getElementById('form-error-msg');
@@ -299,12 +297,10 @@
       var data = getValues();
       var validationError = validate(data);
       if (validationError) {
-        track('register_error', { error_type: 'validation' });
         showError(validationError);
         return;
       }
 
-      track('register_submit', { sale_type: data.sale_type });
       submitBtn.disabled = true;
       var originalLabel = submitBtn.textContent;
       submitBtn.textContent = 'Submitting…';
@@ -337,7 +333,6 @@
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
         if (json && json.ok) {
-          track('register_success', { sale_type: data.sale_type });
           form.hidden = true;
           successBox.hidden = false;
           successBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -346,32 +341,11 @@
         }
       })
       .catch(function(err) {
-        track('register_error', { error_type: 'network' });
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
-        showError('Submission failed. Please try again, or email danny.maller@gmail.com directly.');
+        showError('Submission failed. Please try again, or email garagesale@avondaleneighbors.org directly.');
         console.error('Form error:', err);
       });
-    });
-  })();
-</script>
-
-<script>
-  // Site-wide click events: CTAs, email links, and links inside map popups.
-  (function() {
-    var PAGE = 'register';
-    document.addEventListener('click', function(e) {
-      if (!e.target || !e.target.closest) return;
-      var cta = e.target.closest('[data-cta]');
-      if (cta) track('cta_click', { cta_id: cta.getAttribute('data-cta'), page: PAGE });
-      var mail = e.target.closest('a[href^="mailto:"]');
-      if (mail) track('email_click', { page: PAGE });
-      var pop = e.target.closest('.mapboxgl-popup a');
-      if (pop) {
-        var href = pop.getAttribute('href') || '';
-        var isMaps = /google\.[^\/]+\/maps|maps\.app\.goo\.gl|maps\.apple\.com/i.test(href);
-        track(isMaps ? 'open_directions' : 'seller_popup_link', { link_url: href, page: PAGE });
-      }
     });
   })();
 </script>
