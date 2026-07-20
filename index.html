@@ -6,11 +6,6 @@
 <title>Avondale Garage Sale | Save the date</title>
 <meta name="description" content="A walking-distance multi-household garage sale in southwest Avondale, Chicago. Saturday, July 18, 2026.">
 <link rel="stylesheet" href="styles.css">
-<style>
-  /* Post-event: no route builder on the goodbye screen */
-  body.is-post .route-fab,
-  body.is-post .route-tray { display: none !important; }
-</style>
 <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16.png">
@@ -458,11 +453,10 @@
       confettiOn = false;
       if (hostBtn) hostBtn.style.display = 'none';
       // event is over: strip the page down to a single next-year screen
-      document.body.classList.add('is-post');
       countdown.hidden = true;
       var title = document.querySelector('.hero-title');
       if (title) title.innerHTML = 'See you<br><span class="yellow">next year</span>';
-      ['.translate-bar', '.hero-fan', '.hero-count', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
+      ['.hero-fan', '.hero-count', '.hero-sub', '.hero-cta-row', '.stripe', '.section', '.map-section'].forEach(function(sel) {
         document.querySelectorAll(sel).forEach(function(el) { el.style.display = 'none'; });
       });
       var post = document.getElementById('postwrap');
@@ -643,7 +637,7 @@
 <script>
   (function() {
     // Paste your 2027 Apps Script web-app URL here after deploying (see apps-script-2027.gs)
-    var SIGNUP_2027_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+    var SIGNUP_2027_URL = 'https://script.google.com/macros/s/AKfycbxU1YHychlrf5S784QKTEUcVpVB5RUFMYUW5E4bgXTS0PCjBjYrcrs-z8pRfvl0tam8Og/exec';
 
     var form = document.getElementById('form-2027');
     if (!form) return;
